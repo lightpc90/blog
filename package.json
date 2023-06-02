@@ -9,8 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextui-org/react": "^1.0.0-beta.13",
+    "firebase": "^9.22.1",
+    "firebase-admin": "^11.9.0",
+    "firebaseui": "^6.0.2",
+    "formik": "^2.4.1",
     "next": "13.4.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "yup": "^1.2.0"
   }
 }
