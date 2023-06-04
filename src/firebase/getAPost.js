@@ -3,7 +3,7 @@ import { doc, getDoc } from "firebase/firestore";
 
 const db = firebase_db
 export default async function getAPost(id) {
-    let docRef = doc(db, 'Posts', id);
+    let docRef = doc(db, 'posts', id);
 
     let result = null;
     let error = null;
