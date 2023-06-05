@@ -3,6 +3,9 @@ import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
 import { Grid, Text, Row, Card, Divider, Button } from '@nextui-org/react'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import getPosts from '@/firebase/getPosts'
+import PostListCard from '@/components/PostListCard'
 
 
 export default function Home() {
@@ -16,6 +19,24 @@ export default function Home() {
     {content: ` Created the user Context component... will be used later`},
     {content: ` Pushed our genesis commit to github and deploy the app`},
   ]
+  const [posts, setPosts] = useState([])
+
+  useEffect(()=>{
+    const fetchPosts = async() => {
+        const {result, error} = await getPosts()
+        if (!!result){
+          setPosts(result.docs.map((post)=>{
+            console.log('value of each post', post.data())
+            return{...post.data(), id:post.id}
+          }))
+        }
+        console.log('error', error)
+    }
+    fetchPosts()
+    console.log('contents of posts: ',posts)
+  }, [])
+  
+
   return (
     <>
       <Head>
@@ -44,21 +65,9 @@ export default function Home() {
               </Button>
             </Link> 
           </Row>
-            <Grid justify='center' xm={12} sm={6} md={4}>
-              <Card variant='bordered'>
-                <Card.Header>
-                  <Text color='secondary' weight='bold'>
-                    Day 1
-                  </Text>
-                </Card.Header>
-                <Card.Divider />
-                <Card.Body>
-                  {Day1Update.map((update, index) => {
-                    return(<Text key={index}>{index + 1}. {update.content}</Text>)
-                  })}
-                </Card.Body>
-              </Card>
-            </Grid>
+          {posts.map((post)=>{
+            return(<PostListCard post = {post} />)    
+          })}
         </Grid.Container>
       
     </>

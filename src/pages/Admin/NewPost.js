@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
+import { useRouter } from 'next/router'
 import {Grid, Input, Text, Button, Row, Textarea, Card, Col} from '@nextui-org/react'
 import AddPost from '@/firebase/AddPost'
 import TextEditor from '@/components/TextEditor'
 
 
 const NewPost = () => {
-
+    const router = useRouter()
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [content, setContent] = useState('')
@@ -16,6 +17,13 @@ const NewPost = () => {
     const handleSubmit = async() => {
         const Post = {title: title, description: description, content: content}
         const {result, error} = await AddPost(Post)
+        if (!!result){ 
+            console.log('result: ',result)
+            const id = result.id
+            console.log("id: ",id)
+            router.push(`/Post/${id}`)
+        }
+        console.log('error: ', error) 
 
     }
 
