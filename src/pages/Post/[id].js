@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import Comments from '@/components/Comments'
-import {Grid, Text, Card} from '@nextui-org/react'
+import CommentList from '@/components/commentList'
+import NewComment from '@/components/newComment'
+import {Grid, Text, Container, Card} from '@nextui-org/react'
 import getAPost from '@/firebase/getAPost'
 
 const PostPage = () => {
@@ -28,11 +29,19 @@ const PostPage = () => {
 
   return (
     <>
-      <div>
-        <h1>{post.title}</h1>
-        <div dangerouslySetInnerHTML={{ __html: post.content }} />
-      </div>
-        <Comments />
+      <Container>
+          <Text weight='bold' size={30} color='secondary'>{post.title}</Text>
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+       
+        <Card css={{}}>
+          <Card.Body>
+            <NewComment postId={id} />
+            <CommentList postId={id} />
+          </Card.Body>
+        </Card>
+      </Container>
+      
+      
     </>
   )
 }

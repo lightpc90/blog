@@ -11,14 +11,6 @@ import PostListCard from '@/components/PostListCard'
 export default function Home() {
 
   const description = `This blog site would be used to inform our esteemed community of the updates on our current and past projects`
-  const Day1Update = [
-    {content: ` We set up the database schemas and connected our blog`},
-    {content: ` set up the user authentications`},
-    {content: ` we installed all our dependencies, kindly check package.json to see the list`},
-    {content: ` we created 3 functions to interract with our database; to fetch all our Posts, fetch a Post by Id, and to save a Post to our database`},
-    {content: ` Created the user Context component... will be used later`},
-    {content: ` Pushed our genesis commit to github and deploy the app`},
-  ]
   const [posts, setPosts] = useState([])
 
   useEffect(()=>{

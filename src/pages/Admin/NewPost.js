@@ -9,10 +9,15 @@ const NewPost = () => {
     const router = useRouter()
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
-    const [content, setContent] = useState('')
+    const [postImage, setPostImage] = useState(null)
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [content, setContent] = useState({})
 
     const handleEditorChange = (value) => {
         setContent(value) 
+    }
+    const handleFile=(e)=>{
+        setPostImage(e.target.files[0])
     }
     const handleSubmit = async() => {
         const Post = {title: title, description: description, content: content}
@@ -54,6 +59,12 @@ const NewPost = () => {
                             value={title}
                         />
                         </Col>
+                    </Grid>
+                    <Grid md={12} xs={12} sm={12}>
+                        <Col>
+                        <Text color='secondary' weight='bold'>Post Image</Text>
+                        <Input type="file" onChange={handleFile} />
+                        </Col>  
                     </Grid>
 
                     <Grid md={12} xs={12} sm={12}>
