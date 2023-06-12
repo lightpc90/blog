@@ -4,6 +4,7 @@ import CommentList from '@/components/commentList'
 import NewComment from '@/components/newComment'
 import {Grid, Text, Container, Card} from '@nextui-org/react'
 import getAPost from '@/firebase/getAPost'
+import Layout from '@/components/Layout'
 
 const PostPage = () => {
   const [post, setPost] = useState({})
@@ -29,7 +30,8 @@ const PostPage = () => {
 
   return (
     <>
-      <Container>
+    <Layout>
+    <Container>
           <Text weight='bold' size={30} color='secondary'>{post.title}</Text>
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
        
@@ -40,8 +42,7 @@ const PostPage = () => {
           </Card.Body>
         </Card>
       </Container>
-      
-      
+    </Layout>
     </>
   )
 }

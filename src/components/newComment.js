@@ -6,14 +6,16 @@ import { AuthContext } from '@/context/AuthContext'
 import CommentLogin from './commentLogin'
 
 const NewComment = ({postId}) => {
-  const {user, setUser} = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
   const [comment, setComment] = useState('')
   const router = useRouter()
   const [isUser, setisUser] = useState(!!user)
   const [loginInputVisible, setLoginInputVisible] = useState(false)
+  const [isEmptyComment, setIsEmptyComment] = useState(false)
 
   const handleComment=(e)=>{
     setComment(e.target.value)
+    setIsEmptyComment(false)
   }
   const handleLoginToggle = ()=>{
     setLoginInputVisible(!loginInputVisible)
@@ -31,9 +33,13 @@ const NewComment = ({postId}) => {
     if(!isUser){
     router.push('/register?q=comment')
     }
-    let commentObject = {content: comment, commenter: user.id, postId:postId}
-    const {result, error} = await addComment(commentObject)
-    if(!!error){console.log('error posting a comment: ', error)}  
+    if(!!comment){
+        let commentObject = {content: comment, commenter: user.uid, postId:postId}
+        const {result, error} = await addComment(commentObject)
+        if(!!error){console.log('error posting a comment: ', error)}
+    }
+    else{setIsEmptyComment(true)}
+      
   }
 
   
@@ -46,20 +52,24 @@ const NewComment = ({postId}) => {
             labelPlaceholder="Comment" 
             value={comment} 
             onChange={handleComment}/>
+        {isEmptyComment?(<Text color='error'>You cannot post an empty comment</Text>):(<></>)}
         <Spacer />
         <Row align='center'>
         <Button onPress={handlePostComment} 
             color='secondary' auto ghost>
             Post Comment
         </Button>
-        {!isUser?(<Button onPress={handleLoginToggle} light color="secondary" auto >
-          Login
-        </Button>):(<></>)}
-        <Text >| Not a registered user? </Text>
-        <Spacer x={.5} />
-        {!isUser?(<Link href={`/register?q=${{"from":'comment', "postId": postId}}`} color="secondary">
-          Register
-        </Link>):(<></>)} 
+        {!isUser?(<>
+            <Button onPress={handleLoginToggle} light color="secondary" auto >
+                Login
+            </Button>
+            <Text >| Not a registered user? </Text>
+            <Spacer x={.5} />
+            <Link href={`/register?q=${{"from":'comment', "postId": postId}}`} color="secondary">
+                Register
+            </Link>
+        </>
+        ):(<></>)} 
         </Row>
         {loginInputVisible?(<><CommentLogin /></>):(<></>)}
            

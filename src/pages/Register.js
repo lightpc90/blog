@@ -1,7 +1,8 @@
 import React, {useState, useContext} from 'react'
-import { Input, Text, Button, Spacer, Card, Container, Grid } from '@nextui-org/react'
+import { Input, Text, Button, Spacer, Card, Row, Link, Container, Grid } from '@nextui-org/react'
 import signUp from '@/firebase/auth/signUp'
 import { AuthContext } from '@/context/AuthContext'
+import { useRouter } from 'next/router'
 
 
 const Register = () => {
@@ -9,8 +10,11 @@ const Register = () => {
     const [password, setPassword] = useState('')
     const [passwordConfirm, setPasswordConfirm] = useState('')
     const [isError, setIsError] = useState(false)
+    const router = useRouter()
 
-    const {user, setUser} = useContext(AuthContext)
+    const {q} = router.query
+
+    const {user} = useContext(AuthContext)
     const handleEmail=(e)=>{
         setEmail(e.target.value)
     }
@@ -24,6 +28,7 @@ const Register = () => {
         if(password!==passwordConfirm){
             setIsError(true)
         }
+        else{setIsError(false)}
     }
     const handleRegister=async()=>{
         if(password!==passwordConfirm){
@@ -31,11 +36,12 @@ const Register = () => {
             console.log("pasword not matched!")
         }
         else{
+          setIsError(false)  
           const {result, error} = await signUp(email, password)
           if (!!result){
-            console.log("logged in")
-            setUser(result.id)
             console.log("user: ",user)
+            if(!!q.postId){router.push(`/Post/${q.postId}`)}
+            else{router.push('/')} 
         }
         }    
     }
@@ -82,12 +88,17 @@ const Register = () => {
             {isError?(<Text color='error'>Password not matched!</Text>):(<></>)}
         </Grid>
         <Grid>
+        <Row>
         <Button bordered 
             color='secondary' 
             auto
             onPress={handleRegister}>
             Register
         </Button>
+        <Text>Registered?</Text>
+        <link href='/Login'>Login</link>
+        </Row>
+        
         </Grid> 
      </Grid.Container>
     </Card>

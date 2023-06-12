@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import {Grid, Input, Text, Button, Row, Textarea, Card, Col} from '@nextui-org/react'
 import AddPost from '@/firebase/AddPost'
 import TextEditor from '@/components/TextEditor'
+import Layout from '@/components/Layout'
 
 
 const NewPost = () => {
@@ -34,7 +35,8 @@ const NewPost = () => {
 
 
   return (
-    <Grid.Container gap={4} css={{ paddingLeft:50, paddingRight:50 }} justify='center' >
+    <Layout>
+        <Grid.Container gap={4} css={{ paddingLeft:50, paddingRight:50 }} justify='center' >
         <Grid md={12}> <Text size={20} weight='bold'>Admin Page: Add A New Post</Text></Grid>
          <Card css={{width:3000, }}>
             <Card.Header>
@@ -107,6 +109,7 @@ const NewPost = () => {
         </Card>
 
     </Grid.Container>
+    </Layout>
   )
 }
 

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import getPosts from '@/firebase/getPosts'
 import PostListCard from '@/components/PostListCard'
+import Layout from '@/components/Layout'
 
 
 export default function Home() {
@@ -31,14 +32,8 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-        <title>Projects Update Blog</title>
-      </Head>
-     
-        <Grid.Container gap={2} css={{p:40}} >
+      <Layout>
+      <Grid.Container gap={2} css={{p:40}} >
           <Row justify='center'>
             <Text 
               weight='bold'
@@ -61,7 +56,8 @@ export default function Home() {
             return(<PostListCard post = {post} />)    
           })}
         </Grid.Container>
-      
+      </Layout>
+       
     </>
   )
 }
