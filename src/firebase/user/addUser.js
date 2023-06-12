@@ -3,14 +3,14 @@ import { collection, addDoc } from "firebase/firestore";
 
 const db = firebase_db
 
-export default async function AddPost(Post) {
+export default async function AddUser(user) {
     const currentDate = new Date();
     const currentTimeString = currentDate.toLocaleTimeString();
-    Post.created = currentTimeString
+    user.created = currentTimeString
     let result = null;
     let error = null;
     try {
-        result = await addDoc(collection(db, 'posts'), Post, 
+        result = await addDoc(collection(db, 'users', user.id), user, 
         { merge: true, }
         );
     } catch (e) {

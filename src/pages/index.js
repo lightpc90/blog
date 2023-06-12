@@ -48,7 +48,7 @@ export default function Home() {
           <Row justify='flex-end'>
             <Link href='/Admin/NewPost'>
               <Button color='secondary' auto>
-                Admin Page
+                Create a Post
               </Button>
             </Link> 
           </Row>

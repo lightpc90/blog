@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import signIn from '@/firebase/auth/signIn'
-import { Input } from '@nextui-org/react'
+import { Input, Container, Card, Grid, Spacer, Row, Button, Link, Text } from '@nextui-org/react'
 import { useRouter } from 'next/router'
+import Layout from '@/components/Layout'
 
 const Login = () => {
     const [email, setEmail] = useState('')
@@ -22,26 +23,31 @@ const Login = () => {
         else{console.log("error: ", error)}
     }
   return (
-    <Container align='center' css={{height:"100vh"}}>
-        <Card css={{width:"50%", my:"10%", py:'4%'}} >
-        <Grid.Container gap={4} direction='column'> 
-        <Text color='secondary' weight='bold'>Login</Text>
+    <Layout>
         <Spacer />
-        <Grid>
+        <Container align='center' css={{height:"100vh"}}>
+        <Card css={{ '@sm': {}, '@md':{width:"50%", my:"10%", py:'4%',}
+        }} >
+        <Grid.Container gap={4} direction='column'
+            css={{'@sm': {width:'100%'}}}>
+        <Spacer /> 
+        <Text color='secondary' size={20} weight='bold'>Login</Text>
+        <Spacer />
+        <Grid >
             <Input
             type='email'
-            css={{width:"70%"}} 
+            css={{width:"80%", }} 
             clearable 
             color='secondary' 
             bordered
             required 
             labelPlaceholder='Email'
             onChange={handleEmail}
-            value={email} />
+            value={email}  />
         </Grid>
         <Grid>
         <Input.Password
-            css={{width:"70%"}} 
+            css={{width:"80%"}} 
             clearable 
             color='secondary' 
             bordered 
@@ -51,21 +57,21 @@ const Login = () => {
             value={password} />
         </Grid>
         <Grid>
-        <Row>
-        <Button bordered 
+        <Button css={{width:"60%"}} bordered 
             color='secondary' 
             auto
             onPress={handleSubmit}>
             Login
         </Button>
-        <Text>Not Registered?</Text>
-        <link href='/Register'>Sign Up</link>
-        </Row>
+        <span> <Text>Not Registered?</Text>
+        <Link href='/Register' color='secondary'>Sign Up</Link> </span>
         
         </Grid> 
      </Grid.Container>
     </Card>
     </Container>
+    </Layout>
+    
   )
 }
 

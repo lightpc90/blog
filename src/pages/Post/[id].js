@@ -32,7 +32,7 @@ const PostPage = () => {
     <>
     <Layout>
     <Container>
-          <Text weight='bold' size={30} color='secondary'>{post.title}</Text>
+          <Text weight='bold' size={25} color='secondary'>{post.title}</Text>
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
        
         <Card css={{}}>

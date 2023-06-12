@@ -1,12 +1,15 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import { useRouter } from 'next/router'
 import {Grid, Input, Text, Button, Row, Textarea, Card, Col} from '@nextui-org/react'
 import AddPost from '@/firebase/AddPost'
 import TextEditor from '@/components/TextEditor'
 import Layout from '@/components/Layout'
+import { AuthContext } from '@/context/AuthContext'
+
 
 
 const NewPost = () => {
+    const {user} = useContext(AuthContext)
     const router = useRouter()
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
@@ -21,7 +24,7 @@ const NewPost = () => {
         setPostImage(e.target.files[0])
     }
     const handleSubmit = async() => {
-        const Post = {title: title, description: description, content: content}
+        const Post = {title: title, description: description, content: content, author: user.uid}
         const {result, error} = await AddPost(Post)
         if (!!result){ 
             console.log('result: ',result)
@@ -37,7 +40,7 @@ const NewPost = () => {
   return (
     <Layout>
         <Grid.Container gap={4} css={{ paddingLeft:50, paddingRight:50 }} justify='center' >
-        <Grid md={12}> <Text size={20} weight='bold'>Admin Page: Add A New Post</Text></Grid>
+        <Grid md={12}> <Text size={16} weight='bold'>Blogger Page: Create A Post</Text></Grid>
          <Card css={{width:3000, }}>
             <Card.Header>
                 <Card.Divider>

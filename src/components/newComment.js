@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { Text, Row, Button, Textarea, Spacer, Link } from '@nextui-org/react'
+import { Text, Row, Button, Grid, Textarea, Spacer, Link } from '@nextui-org/react'
 import addComment from '@/firebase/addComment'
 import { AuthContext } from '@/context/AuthContext'
 import CommentLogin from './commentLogin'
@@ -54,15 +54,17 @@ const NewComment = ({postId}) => {
             onChange={handleComment}/>
         {isEmptyComment?(<Text color='error'>You cannot post an empty comment</Text>):(<></>)}
         <Spacer />
-        <Row align='center'>
+        <Grid.Container alignItems='center'>
         <Button onPress={handlePostComment} 
             color='secondary' auto ghost>
             Post Comment
         </Button>
         {!isUser?(<>
-            <Button onPress={handleLoginToggle} light color="secondary" auto >
-                Login
-            </Button>
+            <Grid>
+              <Button onPress={handleLoginToggle} light color="secondary" auto >
+                  Login
+              </Button>
+            </Grid>
             <Text >| Not a registered user? </Text>
             <Spacer x={.5} />
             <Link href={`/register?q=${{"from":'comment', "postId": postId}}`} color="secondary">
@@ -70,7 +72,7 @@ const NewComment = ({postId}) => {
             </Link>
         </>
         ):(<></>)} 
-        </Row>
+        </Grid.Container>
         {loginInputVisible?(<><CommentLogin /></>):(<></>)}
            
     </div>

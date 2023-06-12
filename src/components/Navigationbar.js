@@ -19,13 +19,14 @@ const Navigationbar = () => {
   return (
     <div>
 
-      <Navbar isBordered variant='sticky'>
+      <Navbar isBordered variant="sticky">
         {user?(<>
         {/** When user logged in */}
           <Navbar.Brand>
          {/**Logo comes here */}
-         <Navbar.Toggle aria-label='toggle navigation' hideIn='md' />
-         <Text b color='inherit'>
+         <Navbar.Toggle aria-label='toggle navigation' />
+         <Spacer />
+         <Text b size={20} color='inherit'>
           24CODELABz
          </Text>
         </Navbar.Brand>
@@ -35,7 +36,7 @@ const Navigationbar = () => {
         </Navbar.Content>
         <Navbar.Content>
           <Navbar.Item>
-            <Button auto flat as={Link} href='/Register'>Logout</Button>
+            <Button auto flat onPress={handleLogout}>Logout</Button>
           </Navbar.Item>
         </Navbar.Content>
         <Navbar.Collapse>
@@ -71,7 +72,7 @@ const Navigationbar = () => {
               <Link color='inherit' 
                 css={{minWidth: '100%',}}
                 href={`#`}>
-                  Contact
+                  Report Bug
               </Link>
             </Navbar.CollapseItem>
             <Navbar.CollapseItem>
@@ -90,10 +91,13 @@ const Navigationbar = () => {
             </Navbar.CollapseItem>
         </Navbar.Collapse>
         </>):(<>
+
+
         {/** When logged out */}
         <Navbar.Brand>
          {/**Logo comes here */}
-         <Navbar.Toggle aria-label='toggle navigation' hideIn='md' />
+         <Navbar.Toggle aria-label='toggle navigation' />
+         <Spacer />
          <Text b color='inherit'>
           24CODELABz
          </Text>
@@ -103,58 +107,43 @@ const Navigationbar = () => {
         </Navbar.Content>
         <Navbar.Content>
           <Navbar.Item>
-            <Button auto flat as={Link} href='/Login'>Login</Button>
+            <Button auto flat bordered color='secondary' as={Link} href='/Login'>Login</Button>
+          </Navbar.Item>
+          <Navbar.Item>
+            <Link color='secondary' href='/Register'>Register</Link>
           </Navbar.Item>
         </Navbar.Content>
         <Navbar.Collapse>
-          <Navbar.CollapseItem>
-              <Link color='inherit' 
-                css={{minWidth: '100%',}}
-                href={`/user/${id}`}>
-                  Profile
-              </Link>
-            </Navbar.CollapseItem>
             <Navbar.CollapseItem>
               <Link color='inherit' 
                 css={{minWidth: '100%',}}
                 href={`/`}>
-                  Posts
-              </Link>
-            </Navbar.CollapseItem>
-            <Navbar.CollapseItem>
-              <Link color='inherit' 
-                css={{minWidth: '100%',}}
-                href={`/Admin/NewPost`}>
-                  Create Post
+                  All Posts
               </Link>
             </Navbar.CollapseItem>
             <Navbar.CollapseItem>
               <Link color='inherit' 
                 css={{minWidth: '100%',}}
                 href={`#`}>
-                  My Posts
+                  Report Bug
               </Link>
             </Navbar.CollapseItem>
             <Navbar.CollapseItem>
-              <Link color='inherit' 
-                css={{minWidth: '100%',}}
-                href={`#`}>
-                  Contact
-              </Link>
-            </Navbar.CollapseItem>
-            <Navbar.CollapseItem>
-              <Link color='inherit' 
+              <Link color='inherit'
                 css={{minWidth: '100%',}}
                 href={`#`}>
                   About
               </Link>
             </Navbar.CollapseItem>
             <Navbar.CollapseItem>
-              <Button flat color='inherit' 
-                css={{minWidth: '100%',}}
-                onPress={handleLogout}>
-                  Logout
-              </Button>
+              <Link bordered color='secondary' href='/Login'>
+                  Login
+              </Link>
+            </Navbar.CollapseItem>
+            <Navbar.CollapseItem>
+              <Link bordered color='secondary' href='/Register'>
+                  Register
+              </Link>
             </Navbar.CollapseItem>
         </Navbar.Collapse>
         </>)}
