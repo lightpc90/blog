@@ -7,20 +7,26 @@ import Layout from '@/components/Layout'
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPasword] = useState('')
+    const [isError, setError] = useState(false)
 
     const router = useRouter()
     const {q} = router.query
 
     const handleEmail = (e)=>{
+        setError(false)
         setEmail(e.target.value)
     }
     const handlePassword=(e)=>{
+        setError(false)
         setPasword(e.target.valeue)
     }
     const handleSubmit = async()=>{
         const {result, error} = await signIn(email, password)
         if(!!result){router.push('/')}
-        else{console.log("error: ", error)}
+        else{
+            console.log("error: ", error)
+            setError(true)
+    }
     }
   return (
     <Layout>
@@ -33,6 +39,8 @@ const Login = () => {
         <Spacer /> 
         <Text color='secondary' size={20} weight='bold'>Login</Text>
         <Spacer />
+        {isError?(<Text color='error'>Wrong Email/Password!</Text>):(<></>)}
+        <Spacer/>
         <Grid >
             <Input
             type='email'
@@ -64,7 +72,7 @@ const Login = () => {
             Login
         </Button>
         <span> <Text>Not Registered?</Text>
-        <Link href='/Register' color='secondary'>Sign Up</Link> </span>
+        <Link href='/Register' ><Text color='secondary'>SignUp</Text></Link> </span>
         
         </Grid> 
      </Grid.Container>

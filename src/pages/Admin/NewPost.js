@@ -1,10 +1,14 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import { useRouter } from 'next/router'
 import {Grid, Input, Text, Button, Row, Textarea, Card, Col} from '@nextui-org/react'
 import AddPost from '@/firebase/AddPost'
 import TextEditor from '@/components/TextEditor'
 import Layout from '@/components/Layout'
 import { AuthContext } from '@/context/AuthContext'
+import capitalizeFirstLetter from '@/helperFunctions/capitalizeFirstLetter'
+import { sanitizeHtml } from '@/helperFunctions/sanitizeEditorContent'
+import SaveFileToStorage from '@/firebase/saveFileToStorage'
+import PostPreview from '@/components/postPreview'
 
 
 
@@ -14,8 +18,19 @@ const NewPost = () => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [postImage, setPostImage] = useState(null)
-    const [uploadProgress, setUploadProgress] = useState(0);
+    const [previewPostImage, setPreviewPostImage] = useState(null)
     const [content, setContent] = useState({})
+    const [isCreating, setCreating] = useState(true)
+    const [post, setPost] = useState({})
+
+    useEffect(()=>{
+        const checkUser =()=>{
+            if(user==null){
+                router.push('/Login')
+            }
+        }
+        checkUser()
+    }, [user])
 
     const handleEditorChange = (value) => {
         setContent(value) 
@@ -23,9 +38,21 @@ const NewPost = () => {
     const handleFile=(e)=>{
         setPostImage(e.target.files[0])
     }
-    const handleSubmit = async() => {
-        const Post = {title: title, description: description, content: content, author: user.uid}
-        const {result, error} = await AddPost(Post)
+    const handlePreview =()=>{
+        if(postImage){
+            const imageURL = URL.createObjectURL(postImage)
+            setPost({title: capitalizeFirstLetter(title).fullSentence,  description: capitalizeFirstLetter(description).fullSentence,  content: sanitizeHtml(content).__html, PreviewPostImage: imageURL })
+            setCreating(false)
+        }
+        
+    }
+    const handleEdit=()=>{setCreating(true)}
+
+    const handleSavePost = async(status) => {
+        const {downloadURL, fileName} = await SaveFileToStorage(postImage)
+        const {__html} = sanitizeHtml(content)
+        const PostToDb = {status: status, title: capitalizeFirstLetter(title).fullSentence,  description: capitalizeFirstLetter(description).fullSentence, postImage: {downloadURL: downloadURL, fileName: fileName},  content: __html, author: user.uid}
+        const {result, error} = await AddPost(PostToDb)
         if (!!result){ 
             console.log('result: ',result)
             const id = result.id
@@ -39,7 +66,7 @@ const NewPost = () => {
 
   return (
     <Layout>
-        <Grid.Container gap={4} css={{ paddingLeft:50, paddingRight:50 }} justify='center' >
+        {isCreating?( <Grid.Container gap={4} css={{ paddingLeft:50, paddingRight:50 }} justify='center' >
         <Grid md={12}> <Text size={16} weight='bold'>Blogger Page: Create A Post</Text></Grid>
          <Card css={{width:3000, }}>
             <Card.Header>
@@ -101,8 +128,8 @@ const NewPost = () => {
                  <Button  
                     color='secondary'  
                     type="submit" auto 
-                    onPress={handleSubmit}>
-                     Add New Post
+                    onPress={handlePreview}>
+                     Preview
                  </Button>
                 </Grid> 
             </Card.Body>
@@ -111,7 +138,10 @@ const NewPost = () => {
             </Card.Footer>
         </Card>
 
-    </Grid.Container>
+    </Grid.Container>):(
+    <PostPreview post={post} handleEdit={handleEdit} handleSavePost={handleSavePost}/>
+    )}
+       
     </Layout>
   )
 }

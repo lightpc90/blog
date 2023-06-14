@@ -1,18 +1,21 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
-import { Grid, Text, Row, Card, Divider, Button } from '@nextui-org/react'
+import { Grid, Text, Row, Card, Divider, Button, Spacer, Container, Avatar } from '@nextui-org/react'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import getPosts from '@/firebase/getPosts'
 import PostListCard from '@/components/PostListCard'
 import Layout from '@/components/Layout'
+import { AuthContext } from '@/context/AuthContext'
+import LoginAvatar from '@/components/loginAvatar'
 
 
 export default function Home() {
 
   const description = `This blog site would be used to inform our esteemed community of the updates on our current and past projects`
   const [posts, setPosts] = useState([])
+  const {user} = useContext(AuthContext)
 
   useEffect(()=>{
     const fetchPosts = async() => {
@@ -33,7 +36,13 @@ export default function Home() {
   return (
     <>
       <Layout>
-      <Grid.Container gap={2} css={{p:40}} >
+        <Container>
+          {user?(<>
+          <LoginAvatar user={user}/>
+          </>):(<></>)}
+        
+        
+        <Grid.Container gap={2} css={{p:40}} >
           <Row justify='center'>
             <Text 
               weight='bold'
@@ -52,10 +61,16 @@ export default function Home() {
               </Button>
             </Link> 
           </Row>
-          {posts.map((post)=>{
+          <Spacer/>
+          <Container > {posts?.map((post)=>{
             return(<PostListCard post = {post} />)    
-          })}
+          })} 
+          </Container>
+          
+          
         </Grid.Container>
+        </Container>
+      
       </Layout>
        
     </>

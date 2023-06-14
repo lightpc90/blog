@@ -1,4 +1,5 @@
 import React from 'react';
+import { Container, Loading, Row } from '@nextui-org/react';
 import {
     onAuthStateChanged, getAuth,
 } from 'firebase/auth';
@@ -31,7 +32,7 @@ export const AuthContextProvider = ({
 
     return (
         <AuthContext.Provider value={{ user }}>
-            {loading ? <div>Loading...</div> : children}
+            {loading ? <Row css={{height: '100%', top: '$5'}} justify='center'><Loading color="secondary">Secondary</Loading></Row> : children}
         </AuthContext.Provider>
     );
 };

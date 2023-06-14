@@ -21,10 +21,13 @@ const CommentList = ({postId}) => {
        
       }, [postId])
 
+  
+
   return (
     <div>
     {comments?.map((commentIstance, index)=>{
-    return(<Container key={index}>
+    return(
+      <Container key={index}>
         <Spacer />
         <Avatar />
         <Text>commentIstance.commenter</Text>

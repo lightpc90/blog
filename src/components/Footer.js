@@ -1,11 +1,17 @@
-import {Container, Text, Spacer, Divider, Grid} from '@nextui-org/react'
+import {Container, Text, Spacer, Divider, Grid, Link} from '@nextui-org/react'
+import SocialMedia from './socialmedia';
+
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
   return (
+    <>
+    
+    <Spacer y={5}/>
+    <SocialMedia />
+    <Container><Divider /></Container>
+     <Spacer />
     <Container display='flex' justify='center' css={{ bottom: 0, width: '100%' }}>
-        <Spacer y={8}/>
-        <Divider />
        <Grid >
             <Text align='center'>&copy; {currentYear} </Text>
         </Grid>
@@ -18,7 +24,9 @@ const Footer = () => {
             <Text>by Gideon Abbey. All Rights Reserved</Text>
         </Grid>
         <Spacer y={2}/>
-    </Container>
+    </Container>    
+    </>
+    
   )
 }
 
