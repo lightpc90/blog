@@ -34,9 +34,11 @@ const NewComment = ({postId}) => {
     router.push('/register?q=comment')
     }
     if(!!comment){
-        let commentObject = {content: comment, commenter: user.uid, postId:postId}
+        let commentObject = {content: comment, commenter: user.username, postId:postId}
         const {result, error} = await addComment(commentObject)
-        if(!!error){console.log('error posting a comment: ', error)}
+        if(!!result){
+
+        }
     }
     else{setIsEmptyComment(true)}
       

@@ -1,37 +1,60 @@
-import { Container, Card, Text, Spacer } from "@nextui-org/react"
+import getAUser from "@/firebase/user/getAUser"
+import { Container, Card, Text, Grid, Col, Spacer, Divider, Row } from "@nextui-org/react"
 import Link from "next/link"
+import { useEffect, useState } from "react"
+import { useAuthContext } from "@/context/AuthContext"
 
 const PostListCard = ({post}) => {
+    const {user} = useAuthContext()
+    const [author, setAuthor] = useState('')
+
+    useEffect(()=>{
+      const fetchAuthor = async()=>{
+        if(user && user.id === post.author){
+          setAuthor('My Post')
+        }
+        else{
+          const {result, error} = await getAUser(post.author)
+          if (result && result.data().username){setAuthor(result.data().username)}
+          else if(result){setAuthor(result.data().email)}
+          else{console.log('error fetching the author', error)}
+        }
+      }
+      fetchAuthor()
+    }, [])
     return(<div key={post.content}>
-            <Link href={`/Post/${post.id}`}>
-              <Card css={{ '@md': {w: "70%", h: "300px"}, '@sm': {w: "90%", h: "200px"} }} variant='bordered' isHoverable isPressable>
-                <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>    
-                <Text color='secondary' weight='bold' size={18}>
-                    {post.title}
-                  </Text>
-                </Card.Header>
-                <Card.Body>
-                  <Card.Image 
-                    src={`post.postImage.downloadURL`}
-                    objectFit="cover"
-                    width="100%"
-                    height={300}
-                  />
-                </Card.Body>
-                <Card.Footer
-                isBlurred
-                css={{
-                  position: "absolute",
-                  bgBlur: "#0f111466",
-                  borderTop: "$borderWeights$light solid $gray800",
-                  bottom: 0,
-                  zIndex: 1,}}>
-                    <Text>
-                      {post.description}
-                    </Text>
-                </Card.Footer>  
-              </Card>
-            </Link>
+            
+              <Grid.Container>
+              <Link href={`/Post/${post.id}?author=${author}`}>
+                <Card css={{mw: '500px'}}  variant='flat' isHoverable isPressable>
+                    <Card.Image 
+                      src={`${post.postImage.downloadURL}`}
+                      objectFit="cover"
+                    />
+                </Card>
+                <Row>
+                <Text size={20} color="secondary" weight='bold'>{post.title}</Text>
+                </Row>
+              </Link>
+                <Col>
+                  <Text size={17}>{post.description}</Text>
+                  <Row>
+                    <Text size={17} b color='secondary'>Author:</Text>
+                    <Spacer x={.3}/>
+                    <Text size={17} b >{author}</Text>
+                  </Row>
+                  <Row>
+                    <Text size={17} b color='secondary'>Published:</Text>
+                    <Spacer x={.3}/>
+                    <Text size={17} b >{post.created}</Text>
+                  </Row>
+                  <Spacer/>
+                  <Divider/>
+                </Col>
+                
+                </Grid.Container>
+              
+          
             <Spacer/>
             
     </div>)

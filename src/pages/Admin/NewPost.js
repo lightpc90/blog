@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect} from 'react'
 import { useRouter } from 'next/router'
-import {Grid, Input, Text, Button, Row, Textarea, Card, Col} from '@nextui-org/react'
+import {Grid, Input, Loading, Text, Image, Button, Row, Textarea, Spacer, Card, Col, Container} from '@nextui-org/react'
 import AddPost from '@/firebase/AddPost'
 import TextEditor from '@/components/TextEditor'
 import Layout from '@/components/Layout'
@@ -9,6 +9,7 @@ import capitalizeFirstLetter from '@/helperFunctions/capitalizeFirstLetter'
 import { sanitizeHtml } from '@/helperFunctions/sanitizeEditorContent'
 import SaveFileToStorage from '@/firebase/saveFileToStorage'
 import PostPreview from '@/components/postPreview'
+import LoginAvatar from '@/components/loginAvatar'
 
 
 
@@ -18,16 +19,18 @@ const NewPost = () => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [postImage, setPostImage] = useState(null)
-    const [previewPostImage, setPreviewPostImage] = useState(null)
+    const [imageURL, setImageURL] = useState(null)
     const [content, setContent] = useState({})
     const [isCreating, setCreating] = useState(true)
     const [post, setPost] = useState({})
+    const [loading, setLoading] = useState(true)
 
     useEffect(()=>{
         const checkUser =()=>{
             if(user==null){
                 router.push('/Login')
             }
+            else{setLoading(false)}
         }
         checkUser()
     }, [user])
@@ -38,9 +41,17 @@ const NewPost = () => {
     const handleFile=(e)=>{
         setPostImage(e.target.files[0])
     }
+    useEffect(()=>{
+        const imagePreview =()=>{
+            setImageURL( URL.createObjectURL(postImage))
+        }
+        if(postImage){
+            imagePreview()
+        }
+    }, [postImage])
+
     const handlePreview =()=>{
         if(postImage){
-            const imageURL = URL.createObjectURL(postImage)
             setPost({title: capitalizeFirstLetter(title).fullSentence,  description: capitalizeFirstLetter(description).fullSentence,  content: sanitizeHtml(content).__html, PreviewPostImage: imageURL })
             setCreating(false)
         }
@@ -51,7 +62,7 @@ const NewPost = () => {
     const handleSavePost = async(status) => {
         const {downloadURL, fileName} = await SaveFileToStorage(postImage)
         const {__html} = sanitizeHtml(content)
-        const PostToDb = {status: status, title: capitalizeFirstLetter(title).fullSentence,  description: capitalizeFirstLetter(description).fullSentence, postImage: {downloadURL: downloadURL, fileName: fileName},  content: __html, author: user.uid}
+        const PostToDb = {status: status, title: title,  description: description, postImage: {downloadURL: downloadURL, fileName: fileName},  content: __html, author: user.id}
         const {result, error} = await AddPost(PostToDb)
         if (!!result){ 
             console.log('result: ',result)
@@ -66,10 +77,16 @@ const NewPost = () => {
 
   return (
     <Layout>
-        {isCreating?( <Grid.Container gap={4} css={{ paddingLeft:50, paddingRight:50 }} justify='center' >
+        <Container css={{'@md':{px:300}}}></Container>
+        {user?.username?(
+          <LoginAvatar user={user}/>
+          ):(<></>)}
+        {!loading?(<>
+            {isCreating?( <Grid.Container gap={4} css={{ '@md': {paddingLeft:200, paddingRight:200} }} justify='center' >
         <Grid md={12}> <Text size={16} weight='bold'>Blogger Page: Create A Post</Text></Grid>
          <Card css={{width:3000, }}>
             <Card.Header>
+                <Spacer y={3}/>
                 <Card.Divider>
                 <Text color='secondary' weight='bold'>Add A New Post</Text>
                 </Card.Divider> 
@@ -98,6 +115,8 @@ const NewPost = () => {
                         <Input type="file" onChange={handleFile} />
                         </Col>  
                     </Grid>
+                    <Container>{postImage? (<Image src={imageURL} alt='blog image'/>):(<></>) }</Container>
+
 
                     <Grid md={12} xs={12} sm={12}>
                         <Col>
@@ -141,6 +160,8 @@ const NewPost = () => {
     </Grid.Container>):(
     <PostPreview post={post} handleEdit={handleEdit} handleSavePost={handleSavePost}/>
     )}
+</>):(<Row css={{height: '100%', top: '$20'}} justify='center'><Loading color="secondary" /></Row>)}
+        
        
     </Layout>
   )

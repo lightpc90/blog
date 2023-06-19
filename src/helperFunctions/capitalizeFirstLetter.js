@@ -6,9 +6,10 @@ const capitalizeFirstLetter = (input) => {
       }
     
       const firstLetter = input.charAt(0).toUpperCase();
+      const secondLetter = input.charAt(1).toUpperCase()
       const restOfWord = input.slice(1).toLowerCase();
     
-      return {fullSentence: firstLetter + restOfWord, firstLetter: firstLetter};
+      return {fullSentence: firstLetter + restOfWord, firstLetter: firstLetter, firstTwoLetters: firstLetter + secondLetter};
 }
 
 export default capitalizeFirstLetter

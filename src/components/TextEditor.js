@@ -1,28 +1,46 @@
 import dynamic from 'next/dynamic';
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import styles from './QuillEditor.module.css'
+
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
 
 const TextEditor = ({ value, onChange }) => {
   const modules = {
     toolbar: [
-      [{ header: [1, 2, false] }],
+      [{ header: [3, 4, false] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link', 'image'],
+      [{ script: 'sub' }, { script: 'super' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ direction: 'rtl' }],
+      [{ color: [] }, { background: [] }],
+      ['blockquote', 'link', 'image'],
+      [{ font: [] }],
+      [{ align: [] }],
       ['clean'],
     ],
   };
 
   const formats = [
     'header',
+    'scripts',
+    'indent',
+    'direction',
+    'background',
+    'font',
+    'align',
     'bold',
     'italic',
     'underline',
     'strike',
+    'blockquote',
     'list',
     'bullet',
     'link',
     'image',
+    'color'
   ];
 
   return (

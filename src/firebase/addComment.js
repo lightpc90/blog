@@ -1,18 +1,26 @@
 import React from 'react'
 import {firebase_db} from "./config";
-import { collection, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 const db = firebase_db
 
-const addComment =async ({commentObject}) => {
+const addComment =async (commentObject) => {
     const currentDate = new Date();
-    const currentTimeString = currentDate.toLocaleTimeString();
-    commentObject.created = currentTimeString
-    const comment = commentObject
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+      weekday: 'short',
+      day: 'numeric',
+      month: 'long',
+    };
+    const formattedDate = currentDate.toLocaleString('en-US', options);
+    commentObject.created = formattedDate
+  
     let result = null;
     let error = null;
     try {
-      result = await updateDoc(collection(db, 'posts', comment.postId), comment, 
+      result = await updateDoc(doc(db, 'posts', commentObject.postId), {comments: arrayUnion(commentObject)}, 
       );
   } catch (e) {
       error = e;

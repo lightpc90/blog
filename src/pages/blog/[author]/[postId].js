@@ -5,36 +5,55 @@ import NewComment from '@/components/newComment'
 import {Grid, Text, Container, Row, Card, Spacer, Divider, Loading} from '@nextui-org/react'
 import getAPost from '@/firebase/getAPost'
 import Layout from '@/components/Layout'
+import getAUser from '@/firebase/user/getAUser'
+import { useAuthContext } from '@/context/AuthContext'
 
-const PostPage = () => {
+const PostView = () => {
+  const {user} = useAuthContext()
   const [post, setPost] = useState({})
   const [blogUrl, setBlogUrl] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [author, setAuthor] = useState('')
   const router = useRouter()
   const {id} = router.query
-  const {author} = router.query
-
-  const fetchPost =async ()=>{
-    const {result, error} = await getAPost(id)
-    if(!!result){
-      console.log('result object in post view', result)
-      setPost(result.data())
-      console.log('downloadURL in postPage: ', result.data().postImage.downloadURL)
-      setBlogUrl(result.data().postImage.downloadURL)
-    }
-  }
 
   useEffect(()=>{
+    const fetchPost =async ()=>{
+      const {result, error} = await getAPost(id)
+      if(!!result){
+        console.log('result object in post view', result)
+        setPost(result.data())
+        console.log('downloadURL in postPage: ', result.data().postImage.downloadURL)
+        setBlogUrl(result.data().postImage.downloadURL)
+      }
+    }
+
     fetchPost()
-    setLoading(false)
+
+    const fetchAuthor =async()=>{
+      if(user && user.id === post.author){
+        setAuthor('My Post')
+      }
+      else{
+        const {result, error} = await getAUser(post.author)
+        if (result && result.data().username){setAuthor(result.data().username)}
+        else if(result){setAuthor(result.data().email)}
+        else{console.log('error fetching the author', error)}
+      }
+    }
+    if(post.author){fetchAuthor()}
   }, [])
+
+
+  if (!post){
+    return(<Loading color="secondary">Secondary</Loading>)
+  }
+
 
 
   return (
     <>
     <Layout>
-    {loading?(<Loading type='spinner' color="secondary"/>):(<>
-      <Container css={{'@md':{px:300}}}>
+    <Container css={{'@md':{px:300}}}>
       <Spacer />
       <Container css={{p:'$2', backgroundColor:"#f0f0f0"}}>
           <Row gap={2}>
@@ -72,11 +91,9 @@ const PostPage = () => {
           </Card.Body>
         </Card>
       </Container>
-    </>)}
-    
     </Layout>
     </>
   )
 }
 
-export default PostPage
+export default PostView

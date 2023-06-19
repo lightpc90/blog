@@ -8,16 +8,28 @@ const PostPreview = ({post, handleEdit, handleSavePost}) => {
 
   return (
 
-    <Container>
+    <Container css={{'@md':{px:300}}}>
+          <Spacer/>
           <Text weight='bold' size={25} color='secondary'>{post.title}</Text>
+          <Text>{post.description}</Text>
+          <Spacer/>
+          <Divider/>
+          <Spacer/>
           <div key={post.PreviewPostImage}><Image src={post.PreviewPostImage} alt='post image'/></div>
           <Spacer/>
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
-          <Container display='flex'>
-            <Button onPress={()=>handleSavePost("Draft")} auto>Save as Draft</Button>
-            <Button onPress={handleEdit} auto>Edit</Button>
-            <Button onPress={()=>handleSavePost("Published")} auto>Publish</Button>
+          <Spacer/>
+          <Divider/>
+          <Spacer/>
+          <Container display='inline'>
+            <Button bordered color='secondary' onPress={()=>handleSavePost("Draft")} auto>Save as Draft</Button>
+            <Spacer/>
+            <Button bordered color='secondary' onPress={handleEdit} auto>Edit</Button>
+            <Spacer/>
+            <Button color='secondary' onPress={()=>handleSavePost("Published")} auto>Publish</Button>
           </Container>
+          <Spacer/>
+          <Divider/>
       </Container>
   )
 }

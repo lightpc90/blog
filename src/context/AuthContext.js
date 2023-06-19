@@ -4,6 +4,7 @@ import {
     onAuthStateChanged, getAuth,
 } from 'firebase/auth';
 import {app} from '../firebase/config';
+import getAUser from '@/firebase/user/getAUser';
 
 const auth = getAuth(app);
 
@@ -18,9 +19,12 @@ export const AuthContextProvider = ({
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async(user) => {
             if (user) {
-                setUser(user);
+                const {result, error} = await getAUser(user.uid)
+                if(result){ setUser(result.data())
+                }
+                else{console.log('error getting users in authContext', error)}
             } else {
                 setUser(null);
             }
@@ -32,7 +36,7 @@ export const AuthContextProvider = ({
 
     return (
         <AuthContext.Provider value={{ user }}>
-            {loading ? <Row css={{height: '100%', top: '$5'}} justify='center'><Loading color="secondary">Secondary</Loading></Row> : children}
+            {loading ? <Row css={{height: '100%', top: '$15'}} justify='center'><Loading type='points' color="secondary"/></Row> : children}
         </AuthContext.Provider>
     );
 };

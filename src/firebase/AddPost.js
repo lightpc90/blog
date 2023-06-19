@@ -5,8 +5,16 @@ const db = firebase_db
 
 export default async function AddPost(Post) {
     const currentDate = new Date();
-    const currentTimeString = currentDate.toLocaleTimeString();
-    Post.created = currentTimeString
+    const options = {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+        weekday: 'short',
+        day: 'numeric',
+        month: 'long',
+      };
+    const formattedDate = currentDate.toLocaleString('en-US', options);
+    Post.created = formattedDate
     let result = null;
     let error = null;
     try {

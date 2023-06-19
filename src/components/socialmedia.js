@@ -23,14 +23,12 @@ const SocialMedia = () => {
 
   return (
     <div>
-    <Container display='flex'>
-        <Text color='secondary' weight='bold'><FcNext /></Text>
-        <Spacer x={1}/>
-        <Button light onPress={handleWhatsAppClick}> <Text size={20} color='success'> Whatsapp <RiWhatsappFill /></Text></Button>
+    <Container  css={{p:'$5', backgroundColor:"#f0f0f0"}}>
+        <Button light onPress={handleWhatsAppClick} auto css={{p:0}}> <Text size={20} color='success'> Whatsapp <RiWhatsappFill /></Text></Button>
         <Spacer x={.5}/>
-        <Link href='#'><Text size={22} color='primary'><SiLinkedin /></Text></Link>
+        <Link href='https://www.linkedin.com/in/gideon-abbey-a8a350122/' target='_blank' rel='noopener noreferrer'><Text size={22} color='primary'>Connect <SiLinkedin /></Text></Link>
         <Spacer x={.5}/>
-        <Link href='#'><Text size={22} color='primary'><FaTwitterSquare /></Text> </Link>
+        <Link href='https://twitter.com/_lightpc_' target='_blank' rel='noopener noreferrer'><Text size={22} color='primary'>Follow <FaTwitterSquare /></Text> </Link>
     </Container>
     <Spacer y={2}/>
     </div>
