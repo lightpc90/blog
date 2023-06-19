@@ -1,12 +1,14 @@
 import getAUser from "@/firebase/user/getAUser"
-import { Container, Card, Text, Grid, Col, Spacer, Divider, Row } from "@nextui-org/react"
+import { Container, Card, Loading, Text, Grid, Col, Spacer, Divider, Row } from "@nextui-org/react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useAuthContext } from "@/context/AuthContext"
 
+
 const PostListCard = ({post}) => {
     const {user} = useAuthContext()
     const [author, setAuthor] = useState('')
+    const [imageLoading, setImageLoading] = useState(true)
 
     useEffect(()=>{
       const fetchAuthor = async()=>{
@@ -22,14 +24,22 @@ const PostListCard = ({post}) => {
       }
       fetchAuthor()
     }, [])
-    return(<div key={post.content}>
+
+    const handleImageLoad = ()=>{
+      setImageLoading(false)
+    }
+
+    return(
+      <div key={post.content}>
             
               <Grid.Container>
               <Link href={`/Post/${post.id}?author=${author}`}>
                 <Card css={{mw: '500px'}}  variant='flat' isHoverable isPressable>
+                    {imageLoading && <Container justifyItems="center" align="center"><Loading type="spinner" color='secondary' /></Container> }
                     <Card.Image 
                       src={`${post.postImage.downloadURL}`}
                       objectFit="cover"
+                      onLoad={handleImageLoad}
                     />
                 </Card>
                 <Row>

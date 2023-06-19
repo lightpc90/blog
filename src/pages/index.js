@@ -17,6 +17,7 @@ export default function Home() {
   const [posts, setPosts] = useState([])
   const {user} = useContext(AuthContext)
   const [loading, setLoading] = useState(true)
+  
 
   useEffect(()=>{
     const fetchPosts = async() => {

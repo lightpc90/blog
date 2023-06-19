@@ -113,6 +113,7 @@ const NewPost = () => {
                         <Col>
                         <Text color='secondary' weight='bold'>Post Image</Text>
                         <Input type="file" onChange={handleFile} />
+                        <Text color='error'>Not exceed 3mb of Image size!</Text>
                         </Col>  
                     </Grid>
                     <Container>{postImage? (<Image src={imageURL} alt='blog image'/>):(<></>) }</Container>
