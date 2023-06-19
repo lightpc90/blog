@@ -2,6 +2,8 @@ import React, {useContext} from 'react'
 import { Navbar, Button, Container, Text, Link, Spacer } from '@nextui-org/react'
 import { AuthContext } from '@/context/AuthContext'
 import Logout from '@/firebase/auth/Logout'
+import {FaGreaterThan, FaLessThan} from 'react-icons/fa'
+import {SiSlashdot} from 'react-icons/si'
 
 
 const Navigationbar = () => {
@@ -26,8 +28,8 @@ const Navigationbar = () => {
          {/**Logo comes here */}
          <Navbar.Toggle aria-label='toggle navigation' />
          <Spacer />
-         <Text b size={20} color='inherit'>
-          24CODELABz
+         <Text b size={15} color='inherit'>
+          <FaLessThan/>24CODELABz<SiSlashdot/><FaGreaterThan/>
          </Text>
         </Navbar.Brand>
         <Navbar.Content enableCursorHighlight hideIn='xs' variant='underline'>
@@ -43,15 +45,15 @@ const Navigationbar = () => {
           <Navbar.CollapseItem>
               <Link color='inherit' 
                 css={{minWidth: '100%',}}
-                href={`#`}>
-                  Profile
+                href={`/${user.username}/Dashboard`}>
+                  My Dashboard
               </Link>
             </Navbar.CollapseItem>
             <Navbar.CollapseItem>
               <Link color='inherit' 
                 css={{minWidth: '100%',}}
                 href={`/`}>
-                  Posts
+                  All Posts
               </Link>
             </Navbar.CollapseItem>
             <Navbar.CollapseItem>
@@ -64,21 +66,14 @@ const Navigationbar = () => {
             <Navbar.CollapseItem>
               <Link color='inherit' 
                 css={{minWidth: '100%',}}
-                href={`#`}>
-                  My Posts
-              </Link>
-            </Navbar.CollapseItem>
-            <Navbar.CollapseItem>
-              <Link color='inherit' 
-                css={{minWidth: '100%',}}
-                href={`#`}>
+                href={`/ReportBug`}>
                   Report Bug
               </Link>
             </Navbar.CollapseItem>
             <Navbar.CollapseItem>
               <Link color='inherit' 
                 css={{minWidth: '100%',}}
-                href={`#`}>
+                href={`/About`}>
                   About
               </Link>
             </Navbar.CollapseItem>

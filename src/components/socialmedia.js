@@ -24,7 +24,7 @@ const SocialMedia = () => {
   return (
     <div>
     <Container  css={{p:'$5', backgroundColor:"#f0f0f0"}}>
-        <Button light onPress={handleWhatsAppClick} auto css={{p:0}}> <Text size={20} color='success'> Whatsapp <RiWhatsappFill /></Text></Button>
+        <Button light onPress={handleWhatsAppClick} auto css={{p:0, zIndex: '1'}}> <Text size={20} color='success'> Whatsapp <RiWhatsappFill /></Text></Button>
         <Spacer x={.5}/>
         <Link href='https://www.linkedin.com/in/gideon-abbey-a8a350122/' target='_blank' rel='noopener noreferrer'><Text size={22} color='primary'>Connect <SiLinkedin /></Text></Link>
         <Spacer x={.5}/>

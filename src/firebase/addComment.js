@@ -5,18 +5,6 @@ import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 const db = firebase_db
 
 const addComment =async (commentObject) => {
-    const currentDate = new Date();
-    const options = {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-      weekday: 'short',
-      day: 'numeric',
-      month: 'long',
-    };
-    const formattedDate = currentDate.toLocaleString('en-US', options);
-    commentObject.created = formattedDate
-  
     let result = null;
     let error = null;
     try {

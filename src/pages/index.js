@@ -60,7 +60,7 @@ export default function Home() {
           </Grid>
           <Row justify='flex-end'>
             <Link href='/Admin/NewPost'>
-              <Button color='secondary' auto>
+              <Button color='secondary' auto css={{zIndex:'1'}}>
                 Create a Post
               </Button>
             </Link> 

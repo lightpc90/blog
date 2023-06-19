@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import signIn from '@/firebase/auth/signIn'
-import { Input, Container, Card, Grid, Spacer, Row, Button, Link, Text } from '@nextui-org/react'
+import { Input, Container, Card, Grid, Spacer, Row, Button, Link, Text, Loading } from '@nextui-org/react'
 import { useRouter } from 'next/router'
 import Layout from '@/components/Layout'
 
@@ -8,6 +8,7 @@ const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPasword] = useState('')
     const [isError, setError] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const router = useRouter()
     const {q} = router.query
@@ -18,14 +19,16 @@ const Login = () => {
     }
     const handlePassword=(e)=>{
         setError(false)
-        setPasword(e.target.valeue)
+        setPasword(e.target.value)
     }
     const handleSubmit = async()=>{
+        setLoading(true)
         const {result, error} = await signIn(email, password)
         if(!!result){router.push('/')}
         else{
             console.log("error: ", error)
             setError(true)
+            setLoading(false)
     }
     }
   return (
@@ -65,12 +68,18 @@ const Login = () => {
             value={password} />
         </Grid>
         <Grid>
-        <Button css={{width:"60%"}} bordered 
-            color='secondary' 
-            auto
-            onPress={handleSubmit}>
-            Login
-        </Button>
+            {loading?(
+                <Button disabled auto bordered color="primary" css={{ px: "$13" }}>
+                    <Loading color="currentColor" size="sm" />
+                </Button>):(<>
+                <Button css={{width:"60%"}} bordered 
+                    color='secondary' 
+                    auto
+                    onPress={handleSubmit}>
+                    Login
+                </Button>
+            </>)}
+        
         <span> <Text>Not Registered?</Text>
         <Link href='/Register' ><Text color='secondary'>SignUp</Text></Link> </span>
         

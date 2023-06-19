@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import getAPost from '@/firebase/getAPost'
 import { useAuthContext } from '@/context/AuthContext'
 import { Text, Spacer, Box, Avatar, Container, Textarea, Divider, Row } from '@nextui-org/react'
 import capitalizeFirstLetter from '@/helperFunctions/capitalizeFirstLetter'
@@ -7,7 +6,7 @@ import EmailSpliting from '@/helperFunctions/emailSpliting'
 
 const CommentList = ({comment}) => {
 const {user} = useAuthContext()
-const emailUser = EmailSpliting(`${comment.commenter}`)
+const commenter = EmailSpliting(`${comment.commenter}`)
 
   return (
     <Container key={comment.index}>
@@ -16,9 +15,9 @@ const emailUser = EmailSpliting(`${comment.commenter}`)
           backgroundColor:"#f0f0f0"}}>
         <Container css={{p:0, backgroundColor:"#f0f0f0"}}>
         <Row align='center' >
-          <Avatar color='secondary' textColor='white'  text={capitalizeFirstLetter(emailUser).firstTwoLetters}/>
+          <Avatar color='secondary' textColor='white'  text={capitalizeFirstLetter(commenter).firstTwoLetters}/>
           <Spacer x={.3}/>
-          <Text weight='bold'>{emailUser}</Text>
+          <Text weight='bold'>{commenter}</Text>
         </Row>
         </Container>
         <Container>

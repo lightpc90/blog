@@ -5,11 +5,17 @@ import NewComment from '@/components/newComment'
 import {Grid, Text, Container, Row, Card, Spacer, Divider, Loading} from '@nextui-org/react'
 import getAPost from '@/firebase/getAPost'
 import Layout from '@/components/Layout'
+import { useAuthContext } from '@/context/AuthContext'
+import LoginAvatar from '@/components/loginAvatar'
+import Comments from '@/components/comments'
 
 const PostPage = () => {
   const [post, setPost] = useState({})
   const [blogUrl, setBlogUrl] = useState('')
+  const [postAuthor, setPostAuthor] = useState('')
+  const {user} = useAuthContext()
   const [loading, setLoading] = useState(true)
+  const [comments, setComments] = useState([])
   const router = useRouter()
   const {id} = router.query
   const {author} = router.query
@@ -21,18 +27,24 @@ const PostPage = () => {
       setPost(result.data())
       console.log('downloadURL in postPage: ', result.data().postImage.downloadURL)
       setBlogUrl(result.data().postImage.downloadURL)
+      setComments(result.data().comments)
     }
   }
 
   useEffect(()=>{
     fetchPost()
+    if(user && user.username === author){setPostAuthor('My Post')}
+    else{setPostAuthor(author)}
     setLoading(false)
-  }, [])
+  }, [comments])
 
 
   return (
     <>
     <Layout>
+    {user?.username?(
+          <LoginAvatar user={user}/>
+          ):(<></>)}
     {loading?(<Loading type='spinner' color="secondary"/>):(<>
       <Container css={{'@md':{px:300}}}>
       <Spacer />
@@ -40,7 +52,7 @@ const PostPage = () => {
           <Row gap={2}>
             <Text weight='bold'>Author:</Text>
             <Spacer x={.3}/>
-            <Text >{author}</Text>
+            <Text >{postAuthor}</Text>
             <Spacer x={.3}/>
             <Text weight='bold'>Pulished:</Text>
             <Spacer x={.3}/>
@@ -61,14 +73,7 @@ const PostPage = () => {
        
         <Card css={{}}>
           <Card.Body>
-            <NewComment postId={id} />
-            <Spacer />
-            <Text weight='bold' align='center'>Comments</Text>
-            <Spacer y={.5}/>
-            <Container><Divider /></Container>
-            {post.comments?.map((comment)=>{
-              return(<CommentList comment={comment} />)  
-            })} 
+            <Comments id={id} setComments={setComments} comments={comments}/>
           </Card.Body>
         </Card>
       </Container>
