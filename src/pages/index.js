@@ -13,7 +13,10 @@ import LoginAvatar from '@/components/loginAvatar'
 
 export default function Home() {
 
-  const description = `This blog site would be used to inform our esteemed community of the updates on our current and past projects`
+  const description = `Welcome to our commuity blog app, where you'll get updates on our past and current projects. 
+  You could also use this platform to create your own blog.`
+  const description2 = ` and start creating your blog posts. A blog post styled your way!`
+  const description3 = `Start creating your blog posts. A blog post styled your way!`
   const [posts, setPosts] = useState([])
   const {user} = useContext(AuthContext)
   const [loading, setLoading] = useState(true)
@@ -58,6 +61,19 @@ export default function Home() {
             <Text >
               {description}
             </Text>
+            <Spacer/>
+            {user?(
+            <>
+            <Text >
+              {description3}
+            </Text>
+            </>):(
+            <>
+            <Text >
+              <Link href='/Login'>Sign in</Link>{description2}
+            </Text>
+            </>)}
+            
           </Grid>
           <Row justify='flex-end'>
             <Link href='/Admin/NewPost'>
