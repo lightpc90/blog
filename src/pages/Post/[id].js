@@ -15,6 +15,7 @@ const PostPage = () => {
   const [postAuthor, setPostAuthor] = useState('')
   const {user} = useAuthContext()
   const [loading, setLoading] = useState(true)
+  const [imageLoading, setImageLoading] = useState(true)
   const [comments, setComments] = useState([])
   const router = useRouter()
   const {id} = router.query
@@ -38,6 +39,9 @@ const PostPage = () => {
     setLoading(false)
   }, [comments])
 
+  const handleImageLoad =()=>{
+    setImageLoading(false)
+  }
 
   return (
     <>
@@ -62,7 +66,9 @@ const PostPage = () => {
           
           <Text weight='bold' size={25} color='secondary'>{post.title}</Text>
           <Card>
-              <Card.Image src={blogUrl} alt="Image" width="500"/>
+          {imageLoading && <Container justifyItems="center" align="center"><Loading type="spinner" color='secondary' /></Container> }
+              <Card.Image src={blogUrl} alt="Image" width="500"
+              onLoad={handleImageLoad}/>
           </Card>
           
           <Spacer/>

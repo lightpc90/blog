@@ -29,6 +29,7 @@ const Login = () => {
             console.log("error: ", error)
             setError(true)
             setLoading(false)
+            alert('failed to login!')
     }
     }
   return (

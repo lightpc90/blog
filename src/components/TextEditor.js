@@ -25,7 +25,7 @@ const TextEditor = ({ value, onChange }) => {
 
   const formats = [
     'header',
-    'scripts',
+    'script',
     'indent',
     'direction',
     'background',

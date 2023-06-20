@@ -42,6 +42,7 @@ const Register = () => {
         if(password!==passwordConfirm){
             setIsError(true)
             console.log("pasword not matched!")
+            alert('password does not match!')
             setLoading(false)
         }
         else{
@@ -50,10 +51,11 @@ const Register = () => {
           if (!!result){
             const userDetails = result.user
             userDetails.username = capitalizeFirstLetter(username).fullSentence
-            console.log('userDetails got from auth sign up: ', userDetails)
-            console.log('getting user id from userDetails: ', userDetails.uid)
             const response = await AddUser(userDetails)
-            console.log("data from AddUser response: ", response)
+            setEmail('')
+            setPassword('')
+            setPasswordConfirm('')
+            setUsername('')
             router.push('/')
         }
         if(error){console.log('error from signing up user', error)}

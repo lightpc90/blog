@@ -33,9 +33,10 @@ const NewComment = ({postId, setComments}) => {
   const handlePostComment = async()=>{
     setLoading(true)
     if(!isUser){
-    router.push('/register?q=comment')
+      setLoginInputVisible(true)
+      setLoading(false)
     }
-    if(!!comment){
+    if(!!comment && user){
         let commentObject = {content: comment, commenter: user.username, postId:postId}
         const currentDate = new Date();
         const options = {
@@ -54,9 +55,11 @@ const NewComment = ({postId, setComments}) => {
         }
         if(error){
           console.log('error creating comment', error)
+          alert('error posting comment')
         }
     }
-    else{setIsEmptyComment(true)}
+    else if(comment===null){setIsEmptyComment(true)}
+    setComment('')
     setLoading(false)
       
   }
