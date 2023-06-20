@@ -29,7 +29,9 @@ const Navigationbar = () => {
          <Navbar.Toggle aria-label='toggle navigation' />
          <Spacer />
          <Text b size={15} color='inherit'>
-          <FaLessThan/>24CODELABz<SiSlashdot/><FaGreaterThan/>
+          <Link color='secondary' href='/'>
+            <FaLessThan/>24CODELABz<SiSlashdot/><FaGreaterThan/>
+          </Link>
          </Text>
         </Navbar.Brand>
         <Navbar.Content enableCursorHighlight hideIn='xs' variant='underline'>

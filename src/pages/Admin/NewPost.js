@@ -24,6 +24,8 @@ const NewPost = () => {
     const [isCreating, setCreating] = useState(true)
     const [post, setPost] = useState({})
     const [loading, setLoading] = useState(true)
+    const [saveLoading, setSaveLoading] = useState(false)
+    const [postStatus, setPostStatus] = useState('')
 
     useEffect(()=>{
         const checkUser =()=>{
@@ -60,6 +62,8 @@ const NewPost = () => {
     const handleEdit=()=>{setCreating(true)}
 
     const handleSavePost = async(status) => {
+        setPostStatus(status)
+        setSaveLoading(true)
         const {downloadURL, fileName} = await SaveFileToStorage(postImage)
         const {__html} = sanitizeHtml(content)
         const PostToDb = {status: status, title: title,  description: description, postImage: {downloadURL: downloadURL, fileName: fileName},  content: __html, author: user.id}
@@ -68,8 +72,9 @@ const NewPost = () => {
             console.log('result: ',result)
             const id = result.id
             console.log("id: ",id)
-            router.push(`/Post/${id}`)
+            router.push(`/Post/${id}?author=${user.username}`)
         }
+        setSaveLoading(false)
         console.log('error: ', error) 
 
     }
@@ -159,7 +164,7 @@ const NewPost = () => {
         </Card>
 
     </Grid.Container>):(
-    <PostPreview post={post} handleEdit={handleEdit} handleSavePost={handleSavePost}/>
+    <PostPreview post={post} handleEdit={handleEdit} handleSavePost={handleSavePost} saveLoading={saveLoading} postStatus={postStatus}/>
     )}
 </>):(<Row css={{height: '100%', top: '$20'}} justify='center'><Loading color="secondary" /></Row>)}
         

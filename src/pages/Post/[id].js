@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import CommentList from '@/components/commentList'
 import NewComment from '@/components/newComment'
-import {Grid, Text, Container, Row, Card, Spacer, Divider, Loading} from '@nextui-org/react'
+import {Grid, Text, Container, Row, Col, Card, Spacer, Divider, Loading} from '@nextui-org/react'
 import getAPost from '@/firebase/getAPost'
 import Layout from '@/components/Layout'
 import { useAuthContext } from '@/context/AuthContext'
@@ -52,16 +52,19 @@ const PostPage = () => {
     {loading?(<Loading type='spinner' color="secondary"/>):(<>
       <Container css={{'@md':{px:300}}}>
       <Spacer />
-      <Container css={{p:'$2', backgroundColor:"#f0f0f0"}}>
-          <Row gap={2}>
+      <Container css={{p:'$2', }}>
+          <Col gap={2}>
+            <Row>
             <Text weight='bold'>Author:</Text>
             <Spacer x={.3}/>
             <Text >{postAuthor}</Text>
-            <Spacer x={.3}/>
-            <Text weight='bold'>Pulished:</Text>
-            <Spacer x={.3}/>
-            <Text >{post.created}</Text>
-          </Row>
+            </Row>
+            <Row>
+              <Text weight='bold'>Pulished:</Text>
+              <Spacer x={.3}/>
+              <Text >{post.created}</Text>
+            </Row>
+          </Col>
         </Container>
           
           <Text weight='bold' size={25} color='secondary'>{post.title}</Text>

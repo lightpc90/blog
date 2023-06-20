@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import {Grid, Text, Container, Card, Spacer, Divider, Button, Image} from '@nextui-org/react'
+import {Grid, Text, Loading, Container, Card, Spacer, Divider, Button, Image} from '@nextui-org/react'
 import getAPost from '@/firebase/getAPost'
 import Layout from '@/components/Layout'
 
-const PostPreview = ({post, handleEdit, handleSavePost}) => {
+const PostPreview = ({post, handleEdit, handleSavePost, saveLoading, postStatus}) => {
 
   return (
 
@@ -22,11 +22,29 @@ const PostPreview = ({post, handleEdit, handleSavePost}) => {
           <Divider/>
           <Spacer/>
           <Container display='inline'>
-            <Button bordered color='secondary' onPress={()=>handleSavePost("Draft")} auto>Save as Draft</Button>
+            {saveLoading && postStatus==='Draft'? (
+            <>
+              <Button disabled auto bordered color="primary" css={{ px: "$13" }}>
+                    <Loading color="currentColor" size="sm" />
+                </Button>
+            </>):(
+            <>
+              <Button bordered color='secondary' onPress={()=>handleSavePost("Draft")} auto>Save as Draft</Button>
+            </>)}
+            
             <Spacer/>
             <Button bordered color='secondary' onPress={handleEdit} auto>Edit</Button>
             <Spacer/>
-            <Button color='secondary' onPress={()=>handleSavePost("Published")} auto>Publish</Button>
+            {saveLoading && postStatus==='Published' ?(
+            <>
+              <Button disabled auto bordered color="primary" css={{ px: "$13" }}>
+                    <Loading color="currentColor" size="sm" />
+                </Button>
+            </>):(
+            <>
+              <Button color='secondary' onPress={()=>handleSavePost("Published")} auto>Publish</Button>
+            </>)}
+            
           </Container>
           <Spacer/>
           <Divider/>

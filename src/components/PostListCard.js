@@ -51,12 +51,12 @@ const PostListCard = ({post}) => {
                   <Row>
                     <Text size={17} b color='secondary'>Author:</Text>
                     <Spacer x={.3}/>
-                    <Text size={17} b >{author}</Text>
+                    <Text b >{author}</Text>
                   </Row>
                   <Row>
                     <Text size={17} b color='secondary'>Published:</Text>
                     <Spacer x={.3}/>
-                    <Text size={17} b >{post.created}</Text>
+                    <Text b >{post.created}</Text>
                   </Row>
                   <Spacer/>
                   <Divider/>
