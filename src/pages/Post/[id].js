@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import CommentList from '@/components/commentList'
-import NewComment from '@/components/newComment'
 import {Grid, Text, Container, Row, Col, Card, Spacer, Divider, Loading} from '@nextui-org/react'
 import getAPost from '@/firebase/getAPost'
 import Layout from '@/components/Layout'
