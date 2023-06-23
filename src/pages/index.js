@@ -1,13 +1,13 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
-import { Grid, Text, Row, Card, Divider, Button, Loading, Spacer, Container, Avatar, StyledLoadingContainer } from '@nextui-org/react'
+import { Grid, Text, Row, Card, Col, Divider, Button, Loading, Spacer, Container, Avatar, StyledLoadingContainer } from '@nextui-org/react'
 import Link from 'next/link'
 import { useEffect, useState, useContext } from 'react'
 import getPosts from '@/firebase/getPosts'
 import PostListCard from '@/components/PostListCard'
 import Layout from '@/components/Layout'
-import { AuthContext } from '@/context/AuthContext'
+import { useAuthContext } from '@/context/AuthContext'
 import LoginAvatar from '@/components/loginAvatar'
 
 
@@ -17,28 +17,13 @@ export default function Home() {
   You could also use this platform to create your own blog.`
   const description2 = ` and start creating your blog posts. A blog post styled your way!`
   const description3 = `Start creating your blog posts. A blog post styled your way!`
-  const [posts, setPosts] = useState([])
-  const {user} = useContext(AuthContext)
+  //const [posts, setPosts] = useState([])
+  const {user, ctxPosts} = useAuthContext()
   const [loading, setLoading] = useState(true)
   
-
   useEffect(()=>{
-    const fetchPosts = async() => {
-        const {result, error} = await getPosts()
-        if (!!result){
-          setPosts(result.docs.map((post)=>{
-            console.log('value of each post', post.data())
-            console.log('value of downloadURL', post.data().postImage.downloadURL)
-            return{...post.data(), id:post.id}
-          }))
-          
-        }
-        setLoading(false)
-        console.log('error', error)
-    }
-    fetchPosts()
-  }, [])
-  
+    if(ctxPosts){setLoading(false)}
+  },[])
 
   return (
     <>
@@ -58,22 +43,25 @@ export default function Home() {
             </Text>
           </Row>
           <Grid sm={12} md={12} justify='center'>
-            <Text >
-              {description}
-            </Text>
-            <Spacer/>
-            {user?(
-            <>
-            <Text >
-              {description3}
-            </Text>
-            </>):(
-            <>
-            <Text >
-              <Link href='/Login'>Sign in</Link>{description2}
-            </Text>
-            </>)}
+            <Col>
+              <Text >
+                {description}
+              </Text>
+              <Spacer/>
+              {user?(
+              <>
+              <Text >
+                {description3}
+              </Text>
+              </>):(
+              <>
+              <Text >
+                <Link href='/Login'>Sign in</Link>{description2}
+              </Text>
+              </>)}
             
+            </Col>
+           
           </Grid>
           <Row justify='flex-end'>
             <Link href='/Admin/NewPost'>
@@ -85,7 +73,7 @@ export default function Home() {
           <Spacer/>
           <Container css={{p:0}} >
             {!loading?(<>
-              {posts.map((post)=>{
+              {ctxPosts.map((post)=>{
             return(<PostListCard post = {post} />)    
             })}
             </>):(<>

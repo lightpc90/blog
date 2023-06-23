@@ -8,10 +8,11 @@ import ProfileEdit from '@/components/ProfileEdit'
 import GetUserAuth from '@/firebase/auth/getUserAuth'
 import {FcAbout} from 'react-icons/fc'
 import {MdEmail, MdContactPhone} from 'react-icons/md'
+import DashboardPublishPost from '@/components/dashboardPublishPost'
 
 
 const Dashboard = () => {
-    const {user} = useAuthContext()
+    const {user, ctxPosts} = useAuthContext()
     const router = useRouter()
     const {username} = router.query
     const [_username, _setUsername] = useState('')
@@ -23,43 +24,70 @@ const Dashboard = () => {
     const [isEditing, setIsEditing] = useState(false)
     const [registeredWithEmail, setRegisteredWithEmail] = useState(false)
     const [registeredWithPhone, setRegisteredWithPhone] = useState(false)
+    const [drafts, setDrafts] = useState([])
+    const [published, setPublished] = useState([])
     
-    const setUserInfo =async()=>{
-        if(user.username){_setUsername(user.username)}
-        else{_setUsername('Not Set')}
-
-        const {isEmailProviderLinked, isPhoneProviderLinked} = await GetUserAuth()
-       {/** user registered with email or email has already been updated*/}
-        if (isEmailProviderLinked){
-            setRegisteredWithEmail(true)
-            setEmail(user.email)
-        }
-        else if(user.email){setEmail(user.email)}
-
-        {/** user registered with phone or phone has already been updated*/}
-        if(isPhoneProviderLinked){
-            setRegisteredWithPhone(true)
-            setPhone(user.phone)
-        }
-        else if(user.phone){setPhone(user.phone)}
-
-        if(user.firstName){setFirstName(user.firstName)}
-        else{setFirstName('Not set')}
-
-        if(user.lastName){setLastName(user.lastName)}
-        else{setLastName('Not set')}
-
-        if(user.userBio){setUserBio(user.userBio)}
-        else{setUserBio('Not set')}
-    }
-
-    useEffect(()=>{
-        setUserInfo()
-    },[])
 
     const handleEditing = ()=>{
         setIsEditing(true)
     }
+
+    const setUserInfo =async()=>{
+        if(!user){router.push('/Login')}
+        else{
+            if(user.username){_setUsername(user.username)}
+            else{_setUsername('Not Set')}
+
+            const {isEmailProviderLinked, isPhoneProviderLinked} = await GetUserAuth()
+        {/** user registered with email or email has already been updated*/}
+            if (isEmailProviderLinked){
+                setRegisteredWithEmail(true)
+                setEmail(user.email)
+            }
+            else if(user.email){setEmail(user.email)}
+
+            {/** user registered with phone or phone has already been updated*/}
+            if(isPhoneProviderLinked){
+                setRegisteredWithPhone(true)
+                setPhone(user.phone)
+            }
+            else if(user.phone){setPhone(user.phone)}
+
+            if(user.firstName){setFirstName(user.firstName)}
+            else{setFirstName('Not set')}
+
+            if(user.lastName){setLastName(user.lastName)}
+            else{setLastName('Not set')}
+
+            if(user.userBio){setUserBio(user.userBio)}
+            else{setUserBio('Not set')}
+            }
+            
+    }
+
+    useEffect(()=>{
+        setUserInfo()
+    },[user])
+
+    const AllPosts = ()=>{
+        const AllDraft =  ctxPosts.filter((ctxPost)=>{return(ctxPost.author === user.id && ctxPost.status === "Draft")})
+        console.log('all draft: ', AllDraft)
+        setDrafts(AllDraft)
+
+        const AllPublished =  ctxPosts.filter((ctxPost)=>{return(ctxPost.author === user.id && ctxPost.status === "Published")})
+        console.log('all published: ', AllPublished)
+        setPublished(AllPublished)
+    }
+
+    useEffect(()=>{
+        AllPosts()
+    }, [])
+    
+    useEffect(()=>{
+        console.log('drafts: ', drafts )
+        console.log('published: ', published)
+    },[])
+
   return (
     <Layout>
         <Container css={{'@md':{px:400}}}>
@@ -146,7 +174,7 @@ const Dashboard = () => {
             <Spacer/>
 
             {/** Collapse component for draft and published posts */}
-            <Text align='center' size={22} weight='bold' color='secondary'> Your Posts</Text> 
+            <Text align='center' size={20} weight='bold' color='secondary'> Your Blog Posts</Text> 
             <Container display='inline' gap={2}>
                 <Grid  sm={12} md={4}>
                     <Collapse
@@ -154,7 +182,16 @@ const Dashboard = () => {
                     shadow
                     title='Drafts'
                     >
-                        <Text>Drafts</Text>
+                        {drafts.length>0?(
+                        <>
+                            {drafts.map((draft)=>{
+                                draft.title
+                            })}
+                        </>):(
+                        <>
+                            <Link href={`/Admin/NewPost`}>Create Your First Blog</Link>
+                        </>)}
+                        
                     </Collapse>
                 </Grid>
                 <Spacer y={.5}/>
@@ -164,7 +201,13 @@ const Dashboard = () => {
                     shadow
                     title='Published'
                     >
-                        <Text>Published</Text>
+                        {published.length>0?(<>
+                            {published.map((publishedPost, index)=>{
+                                return(<DashboardPublishPost publishedPost={publishedPost} index={index}/>)
+                            })}
+                        </>):(<>
+                            <Link href={`/Admin/NewPost`}>Create Your First Blog</Link>
+                        </>)}   
                     </Collapse>
                 </Grid>
             </Container>

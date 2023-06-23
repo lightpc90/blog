@@ -11,7 +11,7 @@ const PostPage = () => {
   const [post, setPost] = useState({})
   const [blogUrl, setBlogUrl] = useState('')
   const [postAuthor, setPostAuthor] = useState('')
-  const {user} = useAuthContext()
+  const {user, ctxPosts} = useAuthContext()
   const [loading, setLoading] = useState(true)
   const [imageLoading, setImageLoading] = useState(true)
   const [comments, setComments] = useState([])
@@ -20,14 +20,25 @@ const PostPage = () => {
   const {author} = router.query
 
   const fetchPost =async ()=>{
-    const {result, error} = await getAPost(id)
-    if(!!result){
-      console.log('result object in post view', result)
-      setPost(result.data())
-      console.log('downloadURL in postPage: ', result.data().postImage.downloadURL)
-      setBlogUrl(result.data().postImage.downloadURL)
-      setComments(result.data().comments)
+    if(!ctxPosts){
+      const {result, error} = await getAPost(id)
+      if(!!result){
+        console.log('result object in post view', result)
+        setPost(result.data())
+        console.log('downloadURL in postPage: ', result.data().postImage.downloadURL)
+        setBlogUrl(result.data().postImage.downloadURL)
+        setComments(result.data().comments)
+      }
     }
+    if(ctxPosts){
+      const ctxPost = ctxPosts.find((ctxPost) => ctxPost.id === id);
+      setBlogUrl(ctxPost.postImage.downloadURL)
+      setComments(ctxPost.comments)
+      setPost(ctxPost)
+    }
+    
+
+    
   }
 
   useEffect(()=>{
