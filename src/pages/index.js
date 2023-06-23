@@ -34,8 +34,7 @@ export default function Home() {
     }
 
   useEffect(()=>{
-    if(ctxPosts){setLoading(false)}
-    else{fetchPosts()}
+    fetchPosts()
   },[])
 
   return (
