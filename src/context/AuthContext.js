@@ -51,7 +51,7 @@ export const AuthContextProvider = ({
     }, [])
 
     return (
-        <AuthContext.Provider value={{user, ctxPosts}}>
+        <AuthContext.Provider value={{user, ctxPosts, setCtxPosts}}>
             {loading ? <Row css={{height: '100%', top: '$15'}} justify='center'><Loading type='points' color="secondary"/></Row> : children}
         </AuthContext.Provider>
     );
