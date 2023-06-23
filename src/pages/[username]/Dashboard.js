@@ -9,6 +9,8 @@ import GetUserAuth from '@/firebase/auth/getUserAuth'
 import {FcAbout} from 'react-icons/fc'
 import {MdEmail, MdContactPhone} from 'react-icons/md'
 import DashboardPublishPost from '@/components/dashboardPublishPost'
+import DashboardDraftPost from '@/components/dashboardDraftPost'
+
 
 
 const Dashboard = () => {
@@ -185,11 +187,11 @@ const Dashboard = () => {
                         {drafts.length>0?(
                         <>
                             {drafts.map((draft)=>{
-                                draft.title
+                                return(<DashboardDraftPost draftPost={draft} index={index}/>)
                             })}
                         </>):(
                         <>
-                            <Link href={`/Admin/NewPost`}>Create Your First Blog</Link>
+                            <Link href={`/Admin/NewPost`}>Create Your First Draft</Link>
                         </>)}
                         
                     </Collapse>

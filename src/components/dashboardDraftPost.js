@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, Link, Spacer, Row, Divider, Button } from '@nextui-org/react'
+import { Text, Link, Spacer, Row, Divider, Button, Grid } from '@nextui-org/react'
 
 const DashboardDraftPost = ({draftPost, index}) => {
     return (
@@ -17,12 +17,19 @@ const DashboardDraftPost = ({draftPost, index}) => {
                 </Row>
             </Link>
             <Spacer y={.5}/>
-            <Row>
-            <Button bordered color='secondary' auto>Edit</Button>
-            <Spacer x={.3}/>
-            <Button color='secondary' auto>Publish</Button>
-            </Row>
+            <Grid.Container gap={1}>
+                <Grid>
+                    <Button bordered color='gradient' auto>Edit</Button>
+                </Grid>
+                <Grid>
+                    <Button bordered color='secondary' auto>Publish</Button>
+                </Grid>
+                <Grid>
+                    <Button color='error' auto>Delete</Button>
+                </Grid>
+            </Grid.Container>
             
+            <Spacer y={.5}/>
             <Divider />
         </div>
       )

@@ -18,11 +18,24 @@ export default function Home() {
   const description2 = ` and start creating your blog posts. A blog post styled your way!`
   const description3 = `Start creating your blog posts. A blog post styled your way!`
   //const [posts, setPosts] = useState([])
-  const {user, ctxPosts} = useAuthContext()
+  const {user, ctxPosts, setCtxPosts} = useAuthContext()
   const [loading, setLoading] = useState(true)
-  
+
+  const fetchPosts =async()=>{
+    const {result, error} = await getPosts()
+      if(!!result){
+        console.log('post from database: ', result.docs)
+        setCtxPosts(result.docs.map((post)=>{
+          return{...post.data(), id:post.id}
+        }))
+      }
+      else{console.log('error fetching from database: ', error)}
+      setLoading(false)
+    }
+
   useEffect(()=>{
     if(ctxPosts){setLoading(false)}
+    else{fetchPosts()}
   },[])
 
   return (
@@ -73,8 +86,8 @@ export default function Home() {
           <Spacer/>
           <Container css={{p:0}} >
             {!loading?(<>
-              {ctxPosts.map((post)=>{
-            return(<PostListCard post = {post} />)    
+              {ctxPosts.map((post, index)=>{
+            return(<PostListCard post = {post} index={index} />)    
             })}
             </>):(<>
               <Row css={{height: '100%', top: '$5'}} justify='center'><Loading color="secondary">Loading</Loading></Row>

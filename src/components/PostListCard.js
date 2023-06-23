@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { useAuthContext } from "@/context/AuthContext"
 
 
-const PostListCard = ({post}) => {
+const PostListCard = ({post, index}) => {
     const {user} = useAuthContext()
     const [author, setAuthor] = useState('')
     const [imageLoading, setImageLoading] = useState(true)
@@ -30,12 +30,12 @@ const PostListCard = ({post}) => {
     }
 
     return(
-      <div key={post.content}>
+      <div key={index}>
             
               <Grid.Container>
               <Link href={`/Post/${post.id}?author=${author}`}>
                 <Card css={{mw: '500px'}}  variant='flat' isHoverable isPressable>
-                    {imageLoading && <Container justifyItems="center" align="center"><Loading type="spinner" color='secondary' /></Container> }
+                    {imageLoading && <Container  align="center"><Loading type="spinner" color='secondary' /></Container> }
                     <Card.Image 
                       src={`${post.postImage.downloadURL}`}
                       objectFit="cover"
