@@ -14,7 +14,7 @@ import LoginAvatar from '@/components/loginAvatar'
 
 
 const NewPost = () => {
-    const {user} = useContext(AuthContext)
+    const {user, ctxLoaded} = useContext(AuthContext)
     const router = useRouter()
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
@@ -27,22 +27,29 @@ const NewPost = () => {
     const [saveLoading, setSaveLoading] = useState(false)
     const [postStatus, setPostStatus] = useState('')
 
+    {/** function to run when page mounted */}
     useEffect(()=>{
         const checkUser =()=>{
             if(user==null){
                 router.push('/Login')
             }
-            else{setLoading(false)}
         }
-        checkUser()
-    }, [user])
+        if(ctxLoaded){
+            checkUser()
+            setLoading(false)
+        }
+        
+    }, [ctxLoaded])
 
+    {/** function to handle editor change */}
     const handleEditorChange = (value) => {
         setContent(value) 
     }
     const handleFile=(e)=>{
         setPostImage(e.target.files[0])
     }
+
+    {/** useEffect to handle post image upload */}
     useEffect(()=>{
         const imagePreview =()=>{
             setImageURL( URL.createObjectURL(postImage))
@@ -81,95 +88,99 @@ const NewPost = () => {
 
 
   return (
-    <Layout>
-        <Container css={{'@md':{px:300}}}></Container>
-        {user?.username?(
+    <>
+         {!loading?(<>
+            <Layout>
+            {user?.username?(
           <LoginAvatar user={user}/>
           ):(<></>)}
-        {!loading?(<>
-            {isCreating?( <Grid.Container gap={4} css={{ '@md': {paddingLeft:200, paddingRight:200} }} justify='center' >
-        <Grid md={12}> <Text size={16} weight='bold'>Blogger Page: Create A Post</Text></Grid>
-         <Card css={{width:3000, }}>
-            <Card.Header>
-                <Spacer y={3}/>
-                <Card.Divider>
-                <Text color='secondary' weight='bold'>Add A New Post</Text>
-                </Card.Divider> 
-            </Card.Header>
-            
-            <Card.Body>    
-                <Grid.Container gap={2} >
-                    <Grid xs={12} sm={12} md={12}>
-                        <Col>
-                        <Text color='secondary' weight='bold'>Post Title</Text>
-                        <Input
-                            css={{ width: '60%'}}
-                            bordered
-                            placeholder='Your Post Title Here!'
-                            color='secondary'
-                            name='title'
-                            aria-label='title'
-                            onChange={(e) => setTitle(e.target.value)}
-                            value={title}
-                        />
-                        </Col>
-                    </Grid>
-                    <Grid md={12} xs={12} sm={12}>
-                        <Col>
-                        <Text color='secondary' weight='bold'>Post Image</Text>
-                        <Input type="file" onChange={handleFile} />
-                        <Text color='error'>Not exceed 3mb of Image size!</Text>
-                        </Col>  
-                    </Grid>
-                    <Container>{postImage? (<Image src={imageURL} alt='blog image'/>):(<></>) }</Container>
+
+                {isCreating?( <Grid.Container gap={4} css={{ '@md': {paddingLeft:200, paddingRight:200} }} justify='center' >
+            <Grid md={12}> <Text size={16} weight='bold'>Blogger Page: Create A Post</Text></Grid>
+            <Card css={{width:3000, }}>
+                <Card.Header>
+                    <Spacer y={3}/>
+                    <Card.Divider>
+                    <Text color='secondary' weight='bold'>Add A New Post</Text>
+                    </Card.Divider> 
+                </Card.Header>
+                
+                <Card.Body>    
+                    <Grid.Container gap={2} >
+                        <Grid xs={12} sm={12} md={12}>
+                            <Col>
+                            <Text color='secondary' weight='bold'>Post Title</Text>
+                            <Input
+                                css={{ width: '60%'}}
+                                bordered
+                                placeholder='Your Post Title Here!'
+                                color='secondary'
+                                name='title'
+                                aria-label='title'
+                                onChange={(e) => setTitle(e.target.value)}
+                                value={title}
+                            />
+                            </Col>
+                        </Grid>
+                        <Grid md={12} xs={12} sm={12}>
+                            <Col>
+                            <Text color='secondary' weight='bold'>Post Image</Text>
+                            <Input type="file" onChange={handleFile} />
+                            <Text color='error'>Not exceed 3mb of Image size!</Text>
+                            </Col>  
+                        </Grid>
+                        <Container>{postImage? (<Image src={imageURL} alt='blog image'/>):(<></>) }</Container>
 
 
+                        <Grid md={12} xs={12} sm={12}>
+                            <Col>
+                            <Text color='secondary' weight='bold'>Post Desciption</Text>
+                            <Textarea
+                                css={{width: '60%'}}
+                                placeholder='Your Post desciption here!'
+                                bordered
+                                aria-label='description'
+                                color='secondary'
+                                onChange={(e) => setDescription(e.target.value)}
+                                value={description}
+                            />
+                            </Col>  
+                        </Grid>
+                        <Grid md={12} xs={12} sm={12}>
+                            <Col>
+                            <Text color='secondary' weight='bold'>Post Contents</Text>
+                            <TextEditor
+                                css={{width: '60%'}}
+                                value={content}
+                                onChange={handleEditorChange}
+                            />
+                            </Col>  
+                        </Grid>
+                        </Grid.Container>    
                     <Grid md={12} xs={12} sm={12}>
-                        <Col>
-                        <Text color='secondary' weight='bold'>Post Desciption</Text>
-                        <Textarea
-                            css={{width: '60%'}}
-                            placeholder='Your Post desciption here!'
-                            bordered
-                            aria-label='description'
-                            color='secondary'
-                            onChange={(e) => setDescription(e.target.value)}
-                            value={description}
-                        />
-                        </Col>  
-                    </Grid>
-                    <Grid md={12} xs={12} sm={12}>
-                        <Col>
-                        <Text color='secondary' weight='bold'>Post Contents</Text>
-                        <TextEditor
-                            css={{width: '60%'}}
-                            value={content}
-                            onChange={handleEditorChange}
-                        />
-                        </Col>  
-                    </Grid>
-                    </Grid.Container>    
-                <Grid md={12} xs={12} sm={12}>
-                 <Button  
-                    color='secondary'  
-                    type="submit" auto 
-                    onPress={handlePreview}>
-                     Preview
-                 </Button>
-                </Grid> 
-            </Card.Body>
-            <Card.Footer>
-                <Card.Divider />
-            </Card.Footer>
-        </Card>
+                    <Button  
+                        color='secondary'  
+                        type="submit" auto 
+                        onPress={handlePreview}>
+                        Preview
+                    </Button>
+                    </Grid> 
+                </Card.Body>
+                <Card.Footer>
+                    <Card.Divider />
+                </Card.Footer>
+            </Card>
 
-    </Grid.Container>):(
-    <PostPreview post={post} handleEdit={handleEdit} handleSavePost={handleSavePost} saveLoading={saveLoading} postStatus={postStatus}/>
-    )}
-</>):(<Row css={{height: '100%', top: '$20'}} justify='center'><Loading color="secondary" /></Row>)}
+        </Grid.Container>
         
-       
+        ):(
+            <PostPreview post={post} handleEdit={handleEdit} handleSavePost={handleSavePost} saveLoading={saveLoading} postStatus={postStatus}/>
+        )}
     </Layout>
+</>):(<Row css={{height: '100%', top: '$20'}} justify='center'><Loading color="secondary" /></Row>)
+
+}
+    </>
   )
 }
 

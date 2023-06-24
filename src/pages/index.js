@@ -18,29 +18,35 @@ export default function Home() {
   const description2 = ` and start creating your blog posts. A blog post styled your way!`
   const description3 = `Start creating your blog posts. A blog post styled your way!`
   //const [posts, setPosts] = useState([])
-  const {user, ctxPosts, setCtxPosts} = useAuthContext()
+  const {user, ctxPosts, setCtxPosts, ctxLoaded} = useAuthContext()
   const [loading, setLoading] = useState(true)
 
   const fetchPosts =async()=>{
     const {result, error} = await getPosts()
       if(!!result){
-        console.log('post from database: ', result.docs)
+        console.log('posts from database: ', result.docs)
         setCtxPosts(result.docs.map((post)=>{
           return{...post.data(), id:post.id}
         }))
       }
       else{console.log('error fetching from database: ', error)}
-      setLoading(false)
     }
 
   useEffect(()=>{
-    fetchPosts()
-  },[])
+    if(ctxLoaded){
+      setLoading(false)
+      if(ctxPosts.length===0){fetchPosts()}
+      
+    } 
+  },[ctxLoaded])
 
   return (
     <>
+      {!loading?(
+      <>
       <Layout>
-        
+
+        {/** component to display the username of the logged in user */}
         <Container css={{'@md':{px:300}}}>
           {user?.username?(
           <LoginAvatar user={user}/>
@@ -84,19 +90,21 @@ export default function Home() {
           </Row>
           <Spacer/>
           <Container css={{p:0}} >
-            {!loading?(<>
+
+            {/** component to render the list of posts */}
               {ctxPosts.map((post, index)=>{
             return(<PostListCard post = {post} index={index} />)    
             })}
-            </>):(<>
-              <Row css={{height: '100%', top: '$5'}} justify='center'><Loading color="secondary">Loading</Loading></Row>
-            </>)}  
-          </Container >
+
+        </Container >
         </Grid.Container>
         </Container>
-      
       </Layout>
-       
+      </>):(
+      <>
+        {/** render a loading component while still fetching user data */}
+        <Row css={{height: '100%', top: '$5'}} justify='center'><Loading color="secondary">Loading</Loading></Row>
+      </>)}    
     </>
   )
 }

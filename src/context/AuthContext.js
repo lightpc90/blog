@@ -19,40 +19,46 @@ export const AuthContextProvider = ({
     const [user, setUser] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
     const [ctxPosts, setCtxPosts] = React.useState([])
+    const [ctxLoaded, setCtxLoaded] = React.useState(false)
 
-    React.useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async(user) => {
-            if (user) {
-                const {result, error} = await getAUser(user.uid)
-                if(result){ setUser(result.data())
-                }
-                else{console.log('error getting users in authContext', error)}
-            } else {
-                setUser(null);
+    //function to fetch the logged in user
+    const unsubscribe = onAuthStateChanged(auth, async(user) => {
+        if (user) {
+            const {result, error} = await getAUser(user.uid)
+            if(result){ setUser(result.data())
             }
-            setLoading(false);
+            else{console.log('error getting users in authContext', error)}
+        } else {
+            setUser(null);
+        }
+        setCtxLoaded(true)
         });
 
-        return () => unsubscribe();
-    }, []);
-
-    React.useEffect(()=>{
+        //function to fetch all posts from database
         const fetchPosts = async()=>{
             const {result, error} = await getPosts()
             if (result){
-                console.log(' post result from context: ', result.docs)
+                console.log('post result from context: ', result.docs)
                 setCtxPosts(result.docs.map((post)=>{
                     return{...post.data(), id:post.id}
+                    
                 }))
             }
-            if(error){console.log('error fetching posts in context: ', error)}
+            else if(error){console.log('error fetching posts in context: ', error)}     
         }
-        return () => fetchPosts()
-    }, [])
+
+    React.useEffect(() => {
+        return () => unsubscribe();
+    }, []);
+
+    React.useEffect(()=>{ 
+        fetchPosts()
+        setLoading(false)
+    }, [ctxLoaded])
 
     return (
-        <AuthContext.Provider value={{user, ctxPosts, setCtxPosts}}>
-            {loading ? <Row css={{height: '100%', top: '$15'}} justify='center'><Loading type='points' color="secondary"/></Row> : children}
+        <AuthContext.Provider value={{user, ctxPosts, setCtxPosts, ctxLoaded}}>
+            {loading && !ctxLoaded ? <Row css={{height: '100%', top: '$15'}} justify='center'><Loading type='points' color="secondary"/></Row> : children}
         </AuthContext.Provider>
     );
 };

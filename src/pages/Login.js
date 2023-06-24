@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import signIn from '@/firebase/auth/signIn'
 import { Input, Container, Card, Grid, Spacer, Row, Button, Link, Text, Loading } from '@nextui-org/react'
 import { useRouter } from 'next/router'
 import Layout from '@/components/Layout'
+import { useAuthContext } from '@/context/AuthContext'
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPasword] = useState('')
     const [isError, setError] = useState(false)
     const [loading, setLoading] = useState(false)
+    const {user} = useAuthContext()
 
     const router = useRouter()
     const {q} = router.query
@@ -32,6 +34,12 @@ const Login = () => {
             alert('failed to login!')
     }
     }
+
+    {/** if a user is signed in, redirect back to landing page */}
+    useEffect(()=>{
+        if(user){router.push('/')}
+    }, [])
+
   return (
     <Layout>
         <Spacer />

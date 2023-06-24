@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Grid, Button, Collapse, Row, Input, Text, Avatar, Col, Spacer, Link } from '@nextui-org/react'
+import { Container, Grid, Loading, Button, Collapse, Row, Input, Text, Avatar, Col, Spacer, Link } from '@nextui-org/react'
 import { useRouter } from 'next/router'
 import Layout from '@/components/Layout'
 import { useAuthContext } from '@/context/AuthContext'
@@ -14,7 +14,7 @@ import DashboardDraftPost from '@/components/dashboardDraftPost'
 
 
 const Dashboard = () => {
-    const {user, ctxPosts} = useAuthContext()
+    const {user, ctxPosts, ctxLoaded} = useAuthContext()
     const router = useRouter()
     const {username} = router.query
     const [_username, _setUsername] = useState('')
@@ -28,6 +28,8 @@ const Dashboard = () => {
     const [registeredWithPhone, setRegisteredWithPhone] = useState(false)
     const [drafts, setDrafts] = useState([])
     const [published, setPublished] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [postLoading, setPostLoading] = useState(true)
     
 
     const handleEditing = ()=>{
@@ -35,13 +37,10 @@ const Dashboard = () => {
     }
 
     const setUserInfo =async()=>{
-        if(!user){router.push('/Login')}
-        else{
             if(user.username){_setUsername(user.username)}
             else{_setUsername('Not Set')}
-
             const {isEmailProviderLinked, isPhoneProviderLinked} = await GetUserAuth()
-        {/** user registered with email or email has already been updated*/}
+            {/** user registered with email or email has already been updated*/}
             if (isEmailProviderLinked){
                 setRegisteredWithEmail(true)
                 setEmail(user.email)
@@ -63,13 +62,19 @@ const Dashboard = () => {
 
             if(user.userBio){setUserBio(user.userBio)}
             else{setUserBio('Not set')}
-            }
-            
-    }
+        
+        }
+        
 
     useEffect(()=>{
-        setUserInfo()
-    },[user])
+
+        if(ctxLoaded){
+            if(user){setUserInfo()}
+            else{router.push('/')}
+            setLoading(false) 
+        } 
+    },[ctxLoaded])
+
 
     const AllPosts = ()=>{
         const AllDraft =  ctxPosts.filter((ctxPost)=>{return(ctxPost.author === user.id && ctxPost.status === "Draft")})
@@ -82,17 +87,21 @@ const Dashboard = () => {
     }
 
     useEffect(()=>{
-        AllPosts()
-    }, [])
+        if(ctxLoaded){
+            if(ctxPosts.length>0){
+                AllPosts()
+            }
+            else{console.log('ctxPosts is empty')}
+            setPostLoading(false)
+        }  
+    }, [ctxLoaded])
     
-    useEffect(()=>{
-        console.log('drafts: ', drafts )
-        console.log('published: ', published)
-    },[])
 
   return (
-    <Layout>
-        <Container css={{'@md':{px:400}}}>
+    <>
+        {!loading?(
+        <Layout>
+            <Container css={{'@md':{px:400}}}>
         <Col align='center'>
             <Avatar src='/images/avatar_dp.jpg'
             color='secondary'
@@ -122,7 +131,7 @@ const Dashboard = () => {
             </>):(
             <>
             <Row justify='center'>
-                <Button onPress={handleEditing} color='secondary' bordered auto>Edit Profile</Button>
+                <Button css={{zIndex:'1'}} onPress={handleEditing} color='secondary' bordered auto>Edit Profile</Button>
             </Row>
             
             <Spacer/>
@@ -169,7 +178,6 @@ const Dashboard = () => {
                     <Spacer x={0.3}/>
                     <Text >{lastName}</Text>
                 </Row>
-                
             </Container>
             </>)}
              
@@ -186,14 +194,13 @@ const Dashboard = () => {
                     >
                         {drafts.length>0?(
                         <>
-                            {drafts.map((draft)=>{
-                                return(<DashboardDraftPost draftPost={draft} index={index}/>)
+                            {drafts.map((draft, index)=>{
+                                return(<DashboardDraftPost postLoading={postLoading} draftPost={draft} index={index}/>)
                             })}
                         </>):(
                         <>
                             <Link href={`/Admin/NewPost`}>Create Your First Draft</Link>
                         </>)}
-                        
                     </Collapse>
                 </Grid>
                 <Spacer y={.5}/>
@@ -205,7 +212,7 @@ const Dashboard = () => {
                     >
                         {published.length>0?(<>
                             {published.map((publishedPost, index)=>{
-                                return(<DashboardPublishPost publishedPost={publishedPost} index={index}/>)
+                                return(<DashboardPublishPost postLoading={postLoading} publishedPost={publishedPost} index={index}/>)
                             })}
                         </>):(<>
                             <Link href={`/Admin/NewPost`}>Create Your First Blog</Link>
@@ -214,8 +221,13 @@ const Dashboard = () => {
                 </Grid>
             </Container>
         </Container>
-    </Layout>
-    
+        </Layout>
+        ):(
+        <>
+            <Row css={{height: '100%', top: '$20'}} justify='center'><Loading color="secondary" /></Row>
+        </>
+        )}
+    </>      
   )
 }
 

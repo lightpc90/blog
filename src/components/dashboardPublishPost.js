@@ -1,10 +1,12 @@
 import React from 'react'
 import { Text, Link, Container, Spacer, Row, Divider, Button, Grid } from '@nextui-org/react'
 
-const DashboardPublishPost = ({publishedPost, index}) => {
+const DashboardPublishPost = ({postLoading, publishedPost, index}) => {
   return (
     <Container css={{p:0}} key={index}>
-        <Text align='right'>{publishedPost.created}</Text>
+        {!postLoading?(
+        <>
+            <Text align='right'>{publishedPost.created}</Text>
         <Link href={`/Post/${publishedPost.id}?author=${publishedPost.author}`}>
             <Row>
                 <Text>
@@ -31,6 +33,12 @@ const DashboardPublishPost = ({publishedPost, index}) => {
         
         <Spacer y={.5}/>
         <Divider />
+        </>
+        ):(<>
+        {/** component to load when loading drafts */}
+        <Row css={{height: '100%', top: '$15'}} justify='center'><Loading type='points' color="secondary"/></Row>
+        </>)}
+        
     </Container>
   )
 }
