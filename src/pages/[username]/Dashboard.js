@@ -224,7 +224,7 @@ const Dashboard = () => {
         </Layout>
         ):(
         <>
-            <Row css={{height: '100%', top: '$20'}} justify='center'><Loading color="secondary" /></Row>
+            <Row css={{height: '400px'}} align='center' justify='center'><Loading color="secondary" /></Row>
         </>
         )}
     </>      

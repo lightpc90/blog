@@ -103,7 +103,7 @@ export default function Home() {
       </>):(
       <>
         {/** render a loading component while still fetching user data */}
-        <Row css={{height: '100%', top: '$5'}} justify='center'><Loading color="secondary">Loading</Loading></Row>
+        <Row css={{height: '400px'}} align='center' justify='center'><Loading color="secondary">Loading</Loading></Row>
       </>)}    
     </>
   )
