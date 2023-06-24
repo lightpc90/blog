@@ -87,14 +87,12 @@ const Dashboard = () => {
     }
 
     useEffect(()=>{
-        if(ctxLoaded){
-            if(ctxPosts.length>0){
-                AllPosts()
-            }
-            else{console.log('ctxPosts is empty')}
-            setPostLoading(false)
-        }  
-    }, [ctxLoaded])
+        if(ctxPosts.length>0){
+            AllPosts()
+        }
+        else{console.log('ctxPosts is empty')}
+        setPostLoading(false)
+    }, [ctxPosts])
     
 
   return (
