@@ -20,6 +20,7 @@ export const AuthContextProvider = ({
     const [loading, setLoading] = React.useState(true);
     const [ctxPosts, setCtxPosts] = React.useState([])
     const [ctxLoaded, setCtxLoaded] = React.useState(false)
+    const [updateCtxPosts, setUpdateCtxPosts] = useState(false)
 
     //function to fetch the logged in user
     const unsubscribe = onAuthStateChanged(auth, async(user) => {
@@ -54,10 +55,10 @@ export const AuthContextProvider = ({
     React.useEffect(()=>{ 
         fetchPosts()
         setLoading(false)
-    }, [ctxLoaded])
+    }, [ctxLoaded, updateCtxPosts])
 
     return (
-        <AuthContext.Provider value={{user, ctxPosts, setCtxPosts, ctxLoaded}}>
+        <AuthContext.Provider value={{user, ctxPosts, setCtxPosts, ctxLoaded, setUpdateCtxPosts}}>
             {loading && !ctxLoaded ? <Row css={{height: '100%', top: '$15'}} justify='center'><Loading type='points' color="secondary"/></Row> : children}
         </AuthContext.Provider>
     );

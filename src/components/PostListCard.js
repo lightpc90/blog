@@ -30,7 +30,7 @@ const PostListCard = ({post, index}) => {
     }
 
     return(
-      <div key={index}>
+      <Container css={{p:0}} key={index}>
             
               <Grid.Container>
               <Link href={`/Post/${post.id}?author=${author}`}>
@@ -67,7 +67,7 @@ const PostListCard = ({post, index}) => {
           
             <Spacer/>
             
-    </div>)
+    </Container>)
 }
 
 export default PostListCard

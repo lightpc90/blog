@@ -11,7 +11,7 @@ const PostPage = () => {
   const [post, setPost] = useState({})
   const [blogUrl, setBlogUrl] = useState('')
   const [postAuthor, setPostAuthor] = useState('')
-  const {user, ctxPosts} = useAuthContext()
+  const {user, ctxPosts, ctxLoaded} = useAuthContext()
   const [loading, setLoading] = useState(true)
   const [imageLoading, setImageLoading] = useState(true)
   const [comments, setComments] = useState([])
@@ -33,6 +33,7 @@ const PostPage = () => {
     else if(ctxPosts.length>0){
       const ctxPost = ctxPosts.find((ctxPost) => ctxPost.id === id);
       console.log('ctxPosts in post page: ', ctxPosts)
+      console.log('ctxPost found: ', ctxPost)
       setBlogUrl(ctxPost.postImage.downloadURL)
       setComments(ctxPost.comments)
       setPost(ctxPost)
@@ -40,11 +41,13 @@ const PostPage = () => {
   }
 
   useEffect(()=>{
-    fetchPost()
+    if(ctxLoaded){
+      fetchPost()
+    }
     if(user && user.username === author){setPostAuthor('My Post')}
     else{setPostAuthor(author)}
     setLoading(false)
-  }, [comments])
+  }, [comments, ctxLoaded])
 
   const handleImageLoad =()=>{
     setImageLoading(false)

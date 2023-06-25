@@ -20,6 +20,7 @@ export default function Home() {
   //const [posts, setPosts] = useState([])
   const {user, ctxPosts, setCtxPosts, ctxLoaded} = useAuthContext()
   const [loading, setLoading] = useState(true)
+  const [posts, setPosts] = useState([])
 
   const fetchPosts =async()=>{
     const {result, error} = await getPosts()
@@ -32,12 +33,19 @@ export default function Home() {
       else{console.log('error fetching from database: ', error)}
     }
 
+    const fetchPublishedPostsFromCtx = () =>{
+      const publishedPosts =  ctxPosts.filter((ctxPost)=>{return(ctxPost.status === "Published")})
+      console.log('all published posts: ', publishedPosts)
+      setPosts(publishedPosts)
+    }
+    
+
   useEffect(()=>{
     if(ctxLoaded){
-      setLoading(false)
-      if(ctxPosts.length===0){fetchPosts()}
-      
-    } 
+      fetchPublishedPostsFromCtx()
+      setLoading(false)  
+    }
+    //else if(ctxPosts.length===0){fetchPosts()} 
   },[ctxLoaded])
 
   return (
@@ -92,7 +100,7 @@ export default function Home() {
           <Container css={{p:0}} >
 
             {/** component to render the list of posts */}
-              {ctxPosts.map((post, index)=>{
+              {posts.map((post, index)=>{
             return(<PostListCard post = {post} index={index} />)    
             })}
 

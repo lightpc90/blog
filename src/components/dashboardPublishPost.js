@@ -1,13 +1,31 @@
-import React from 'react'
-import { Text, Link, Container, Spacer, Row, Divider, Button, Grid } from '@nextui-org/react'
+import React, {useEffect, useState} from 'react'
+import { Text, Link, Container, Spacer, Row, Divider, Button, Grid} from '@nextui-org/react'
 
-const DashboardPublishPost = ({postLoading, publishedPost, index}) => {
+const DashboardPublishPost = ({user, postLoading, publishedPost, index, ctxPosts}) => {
+    const [author, setAuthor] = useState('')
+
+    const fetchAuthor = async()=>{
+        if(user.id === publishedPost.author){
+          setAuthor('My Post')
+        }
+        else{
+          const {result, error} = await getAUser(publishedPost.author)
+          if (result && result.data().username){setAuthor(result.data().username)}
+          else if(result){setAuthor(result.data().email)}
+          else{console.log('error fetching the author', error)}
+        }
+      }
+
+      useEffect(()=>{
+        fetchAuthor()
+      },[ctxPosts])
+
   return (
     <Container css={{p:0}} key={index}>
         {!postLoading?(
         <>
             <Text align='right'>{publishedPost.created}</Text>
-        <Link href={`/Post/${publishedPost.id}?author=${publishedPost.author}`}>
+        <Link href={`/Post/${publishedPost.id}?author=${author}`}>
             <Row>
                 <Text>
                     {index+1}.
@@ -16,7 +34,8 @@ const DashboardPublishPost = ({postLoading, publishedPost, index}) => {
                 <Text color='secondary'>
                     {publishedPost.title}
                 </Text>
-            </Row>    
+                
+            </Row>  
         </Link>
         <Spacer y={.5}/>
         <Grid.Container gap={1}>

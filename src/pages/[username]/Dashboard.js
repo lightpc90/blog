@@ -210,7 +210,7 @@ const Dashboard = () => {
                     >
                         {published.length>0?(<>
                             {published.map((publishedPost, index)=>{
-                                return(<DashboardPublishPost postLoading={postLoading} publishedPost={publishedPost} index={index}/>)
+                                return(<DashboardPublishPost ctxPosts={ctxPosts} user={user} postLoading={postLoading} publishedPost={publishedPost} index={index}/>)
                             })}
                         </>):(<>
                             <Link href={`/Admin/NewPost`}>Create Your First Blog</Link>

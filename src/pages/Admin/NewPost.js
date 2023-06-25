@@ -14,7 +14,7 @@ import LoginAvatar from '@/components/loginAvatar'
 
 
 const NewPost = () => {
-    const {user, ctxLoaded} = useContext(AuthContext)
+    const {user, ctxLoaded, setUpdateCtxPosts} = useContext(AuthContext)
     const router = useRouter()
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
@@ -69,7 +69,7 @@ const NewPost = () => {
     const handleEdit=()=>{setCreating(true)}
 
     const handleSavePost = async(status) => {
-        setPostStatus(status)
+       setPostStatus(status)
         setSaveLoading(true)
         const {downloadURL, fileName} = await SaveFileToStorage(postImage)
         const {__html} = sanitizeHtml(content)
@@ -81,8 +81,10 @@ const NewPost = () => {
             console.log("id: ",id)
             router.push(`/Post/${id}?author=${user.username}`)
         }
+        else{console.log('error from saving post to dp: ', error)}
+        setUpdateCtxPosts(true)
         setSaveLoading(false)
-        console.log('error: ', error) 
+         
 
     }
 

@@ -1,9 +1,9 @@
 import React from 'react'
-import { Text, Link, Spacer, Row, Divider, Button, Grid } from '@nextui-org/react'
+import { Text, Container, Link, Spacer, Row, Divider, Button, Grid } from '@nextui-org/react'
 
 const DashboardDraftPost = ({postLoading, draftPost, index}) => {
     return (
-        <div key={index}>
+        <Container css={{p:0}} key={index}>
 
             {!postLoading?(
             <>
@@ -41,7 +41,7 @@ const DashboardDraftPost = ({postLoading, draftPost, index}) => {
             <Row css={{height: '100%', top: '$15'}} justify='center'><Loading type='points' color="secondary"/></Row>
             </>)}
             
-        </div>
+        </Container>
       )
     }
 
