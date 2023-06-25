@@ -17,11 +17,11 @@ export default function Home() {
   You could also use this platform to create your own blog.`
   const description2 = ` and start creating your blog posts. A blog post styled your way!`
   const description3 = `Start creating your blog posts. A blog post styled your way!`
-  //const [posts, setPosts] = useState([])
   const {user, ctxPosts, setCtxPosts, ctxLoaded} = useAuthContext()
   const [loading, setLoading] = useState(true)
   const [posts, setPosts] = useState([])
 
+  //function to fetch from database, though not used for not
   const fetchPosts =async()=>{
     const {result, error} = await getPosts()
       if(!!result){
@@ -33,6 +33,7 @@ export default function Home() {
       else{console.log('error fetching from database: ', error)}
     }
 
+// fetch pubished posts
     const fetchPublishedPostsFromCtx = () =>{
       const publishedPosts =  ctxPosts.filter((ctxPost)=>{return(ctxPost.status === "Published")})
       console.log('all published posts: ', publishedPosts)
@@ -41,12 +42,12 @@ export default function Home() {
     
 
   useEffect(()=>{
-    if(ctxLoaded){
+    if(ctxPosts.length>0){
       fetchPublishedPostsFromCtx()
       setLoading(false)  
     }
     //else if(ctxPosts.length===0){fetchPosts()} 
-  },[ctxLoaded])
+  },[ctxPosts])
 
   return (
     <>
