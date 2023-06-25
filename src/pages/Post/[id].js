@@ -20,6 +20,7 @@ const PostPage = () => {
   const {author} = router.query
 
   const fetchPost =async ()=>{
+    /** 
     if(ctxPosts.length===0){
       const {result, error} = await getAPost(id)
       if(!!result){
@@ -30,7 +31,9 @@ const PostPage = () => {
         setComments(result.data().comments)
       }
     }
-    else if(ctxPosts.length>0){
+    */
+
+    if(ctxPosts.length>0){
       const ctxPost = ctxPosts.find((ctxPost) => ctxPost.id === id);
       console.log('ctxPosts in post page: ', ctxPosts)
       console.log('ctxPost found: ', ctxPost)
@@ -41,13 +44,13 @@ const PostPage = () => {
   }
 
   useEffect(()=>{
-    if(ctxLoaded){
+    if(ctxPosts.length>0){
       fetchPost()
+      setLoading(false)
     }
     if(user && user.username === author){setPostAuthor('My Post')}
     else{setPostAuthor(author)}
-    setLoading(false)
-  }, [comments, ctxLoaded])
+  }, [comments, ctxPosts])
 
   const handleImageLoad =()=>{
     setImageLoading(false)
@@ -59,7 +62,7 @@ const PostPage = () => {
     {user?.username?(
           <LoginAvatar user={user}/>
           ):(<></>)}
-    {loading?(<Loading type='spinner' color="secondary"/>):(<>
+    {loading?(<Container css={{height: '300px'}} align='center'><Loading type='spinner' color="secondary"/></Container> ):(<>
       <Container css={{'@md':{px:300}}}>
       <Spacer />
       <Container css={{p:'$2', }}>
@@ -79,7 +82,7 @@ const PostPage = () => {
           
           <Text weight='bold' size={25} color='secondary'>{post.title}</Text>
           <Card>
-          {imageLoading && <Container justifyItems="center" align="center"><Loading type="spinner" color='secondary' /></Container> }
+          {imageLoading && <Container align="center"><Loading type="spinner" color='secondary' /></Container> }
               <Card.Image src={blogUrl} alt="Image" width="500"
               onLoad={handleImageLoad}/>
           </Card>

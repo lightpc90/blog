@@ -22,6 +22,7 @@ export default function Home() {
   const [posts, setPosts] = useState([])
 
   //function to fetch from database, though not used for not
+  /** 
   const fetchPosts =async()=>{
     const {result, error} = await getPosts()
       if(!!result){
@@ -32,6 +33,8 @@ export default function Home() {
       }
       else{console.log('error fetching from database: ', error)}
     }
+
+    */
 
 // fetch pubished posts
     const fetchPublishedPostsFromCtx = () =>{
