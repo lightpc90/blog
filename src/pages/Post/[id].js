@@ -20,36 +20,22 @@ const PostPage = () => {
   const {author} = router.query
 
   const fetchPost =async ()=>{
-    /** 
-    if(ctxPosts.length===0){
-      const {result, error} = await getAPost(id)
-      if(!!result){
-        console.log('result object from database in post view', result)
-        setPost(result.data())
-        console.log('downloadURL in postPage: ', result.data().postImage.downloadURL)
-        setBlogUrl(result.data().postImage.downloadURL)
-        setComments(result.data().comments)
-      }
-    }
-    */
-
-    if(ctxPosts.length>0){
+    
       const ctxPost = ctxPosts.find((ctxPost) => ctxPost.id === id);
       console.log('ctxPosts in post page: ', ctxPosts)
       console.log('ctxPost found: ', ctxPost)
       setBlogUrl(ctxPost.postImage.downloadURL)
       setComments(ctxPost.comments)
-      setPost(ctxPost)
-    }  
+      setPost(ctxPost)  
   }
 
   useEffect(()=>{
     if(ctxPosts.length>0){
       fetchPost()
+      if(user && user.username === author){setPostAuthor('My Post')}
+      else{setPostAuthor(author)}
       setLoading(false)
     }
-    if(user && user.username === author){setPostAuthor('My Post')}
-    else{setPostAuthor(author)}
   }, [comments, ctxPosts])
 
   const handleImageLoad =()=>{

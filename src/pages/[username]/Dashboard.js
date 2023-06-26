@@ -182,7 +182,7 @@ const Dashboard = () => {
             <Spacer/>
 
             {/** Collapse component for draft and published posts */}
-            <Text align='center' size={20} weight='bold' color='secondary'> Your Blog Posts</Text> 
+            <Text align='center' size={20} weight='bold' color='secondary'> My Blog Posts</Text> 
             <Container display='inline' gap={2}>
                 <Grid  sm={12} md={4}>
                     <Collapse
