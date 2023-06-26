@@ -17,7 +17,9 @@ const DashboardPublishPost = ({user, postLoading, publishedPost, index, ctxPosts
       }
 
       useEffect(()=>{
-        fetchAuthor()
+        if(ctxPosts.length>0){
+            fetchAuthor()
+        } 
       },[ctxPosts])
 
   return (

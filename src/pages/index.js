@@ -38,7 +38,7 @@ export default function Home() {
 
 // fetch pubished posts
     const fetchPublishedPostsFromCtx = () =>{
-      const publishedPosts =  ctxPosts.filter((ctxPost)=>{return(ctxPost.status === "Published")})
+      const publishedPosts = ctxPosts.filter((ctxPost)=>{return(ctxPost.status === "Published")})
       console.log('all published posts: ', publishedPosts)
       setPosts(publishedPosts)
     }

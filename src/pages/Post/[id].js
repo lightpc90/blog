@@ -10,7 +10,6 @@ import Comments from '@/components/comments'
 const PostPage = () => {
   const [post, setPost] = useState({})
   const [blogUrl, setBlogUrl] = useState('')
-  const [postAuthor, setPostAuthor] = useState('')
   const {user, ctxPosts, ctxLoaded} = useAuthContext()
   const [loading, setLoading] = useState(true)
   const [imageLoading, setImageLoading] = useState(true)
@@ -19,7 +18,7 @@ const PostPage = () => {
   const {id} = router.query
   const {author} = router.query
 
-  const fetchPost =async ()=>{
+  const fetchPost = ()=>{
     
       const ctxPost = ctxPosts.find((ctxPost) => ctxPost.id === id);
       console.log('ctxPosts in post page: ', ctxPosts)
@@ -32,8 +31,6 @@ const PostPage = () => {
   useEffect(()=>{
     if(ctxPosts.length>0){
       fetchPost()
-      if(user && user.username === author){setPostAuthor('My Post')}
-      else{setPostAuthor(author)}
       setLoading(false)
     }
   }, [comments, ctxPosts])
@@ -56,7 +53,7 @@ const PostPage = () => {
             <Row>
             <Text weight='bold'>Author:</Text>
             <Spacer x={.3}/>
-            <Text >{postAuthor}</Text>
+            <Text >{author}</Text>
             </Row>
             <Row>
               <Text weight='bold'>Pulished:</Text>
