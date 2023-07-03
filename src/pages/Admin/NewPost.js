@@ -118,7 +118,7 @@ const NewPost = () => {
                                 placeholder='Your Post Title Here!'
                                 color='secondary'
                                 name='title'
-                                aria-label='title'
+                                aria-labelledby='title'
                                 onChange={(e) => setTitle(e.target.value)}
                                 value={title}
                             />
@@ -141,7 +141,7 @@ const NewPost = () => {
                                 css={{width: '60%'}}
                                 placeholder='Your Post desciption here!'
                                 bordered
-                                aria-label='description'
+                                aria-labelledby='description'
                                 color='secondary'
                                 onChange={(e) => setDescription(e.target.value)}
                                 value={description}
@@ -152,6 +152,7 @@ const NewPost = () => {
                             <Col>
                             <Text color='secondary' weight='bold'>Post Contents *</Text>
                             <TextEditor
+                                aria-labelledby='text-editor'
                                 css={{width: '60%'}}
                                 value={content}
                                 onChange={handleEditorChange}

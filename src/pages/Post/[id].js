@@ -34,7 +34,7 @@ const PostPage = () => {
       setBlogUrl(ctxPost.postImage.downloadURL)
 
       //I want the most recent comment at the top
-      setComments(ctxPost.comments.reverse())
+      setComments(ctxPost.comments?.reverse())
       setPost(ctxPost)  
   }
 
