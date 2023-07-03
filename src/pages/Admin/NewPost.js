@@ -79,7 +79,13 @@ const NewPost = () => {
             console.log('result: ',result)
             const id = result.id
             console.log("id: ",id)
-            router.push(`/Post/${id}?author=${user.username}`)
+            if(status==='Published'){
+                router.push(`/Post/${id}?author=${user.username}`)
+            }
+            else{
+                router.push(`/${user.username}/Dashboard`)
+            }
+            
         }
         else{console.log('error from saving post to dp: ', error)}
         setUpdateCtxPosts(true)
