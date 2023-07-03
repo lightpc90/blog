@@ -4,12 +4,12 @@ import { Text, Spacer, Box, Avatar, Container, Textarea, Divider, Row } from '@n
 import capitalizeFirstLetter from '@/helperFunctions/capitalizeFirstLetter'
 import EmailSpliting from '@/helperFunctions/emailSpliting'
 
-const CommentList = ({comment}) => {
+const CommentList = ({comment, index}) => {
 const {user} = useAuthContext()
 const commenter = EmailSpliting(`${comment.commenter}`)
 
   return (
-    <Container key={comment.index}>
+    <Container key={index}>
 
         <Container css={{padding:"1rem",
           backgroundColor:"#f0f0f0"}}>

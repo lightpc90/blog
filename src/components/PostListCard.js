@@ -3,6 +3,7 @@ import { Container, Card, Loading, Text, Grid, Col, Spacer, Divider, Row } from 
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useAuthContext } from "@/context/AuthContext"
+import AuthorAvatar from "./AuthorAvatar"
 
 
 const PostListCard = ({post, index}) => {
@@ -12,15 +13,10 @@ const PostListCard = ({post, index}) => {
 
     useEffect(()=>{
       const fetchAuthor = async()=>{
-        if(user && user.id === post.author){
-          setAuthor('My Post')
-        }
-        else{
           const {result, error} = await getAUser(post.author)
           if (result && result.data().username){setAuthor(result.data().username)}
           else if(result){setAuthor(result.data().email)}
           else{console.log('error fetching the author', error)}
-        }
       }
       fetchAuthor()
     }, [])
@@ -48,20 +44,10 @@ const PostListCard = ({post, index}) => {
               </Link>
                 <Col>
                   <Text size={17}>{post.description}</Text>
-                  <Row>
-                    <Text size={17} b color='secondary'>Author:</Text>
-                    <Spacer x={.3}/>
-                    <Text b >{author}</Text>
-                  </Row>
-                  <Row align="center">
-                    <Text size={17} b color='secondary'>Published:</Text>
-                    <Spacer x={.3}/>
-                    <Text >{post.created}</Text>
-                  </Row>
-                  <Spacer/>
-                  <Divider/>
+                  <AuthorAvatar author={author} post={post}/> 
                 </Col>
-                
+                <Spacer/>
+                <Divider/>
                 </Grid.Container>
               
           

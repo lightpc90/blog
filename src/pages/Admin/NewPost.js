@@ -60,7 +60,7 @@ const NewPost = () => {
     }, [postImage])
 
     const handlePreview =()=>{
-        if(postImage){
+        if(title && postImage && content){
             setPost({title: capitalizeFirstLetter(title).fullSentence,  description: capitalizeFirstLetter(description).fullSentence,  content: sanitizeHtml(content).__html, PreviewPostImage: imageURL })
             setCreating(false)
         }
@@ -111,7 +111,7 @@ const NewPost = () => {
                     <Grid.Container gap={2} >
                         <Grid xs={12} sm={12} md={12}>
                             <Col>
-                            <Text color='secondary' weight='bold'>Post Title</Text>
+                            <Text color='secondary' weight='bold'>Post Title *</Text>
                             <Input
                                 css={{ width: '60%'}}
                                 bordered
@@ -126,7 +126,7 @@ const NewPost = () => {
                         </Grid>
                         <Grid md={12} xs={12} sm={12}>
                             <Col>
-                            <Text color='secondary' weight='bold'>Post Image</Text>
+                            <Text color='secondary' weight='bold'>Post Image *</Text>
                             <Input type="file" onChange={handleFile} />
                             <Text color='error'>Not exceed 3mb of Image size!</Text>
                             </Col>  
@@ -136,7 +136,7 @@ const NewPost = () => {
 
                         <Grid md={12} xs={12} sm={12}>
                             <Col>
-                            <Text color='secondary' weight='bold'>Post Desciption</Text>
+                            <Text color='secondary' weight='bold'>Post Desciption (optional)</Text>
                             <Textarea
                                 css={{width: '60%'}}
                                 placeholder='Your Post desciption here!'
@@ -150,7 +150,7 @@ const NewPost = () => {
                         </Grid>
                         <Grid md={12} xs={12} sm={12}>
                             <Col>
-                            <Text color='secondary' weight='bold'>Post Contents</Text>
+                            <Text color='secondary' weight='bold'>Post Contents *</Text>
                             <TextEditor
                                 css={{width: '60%'}}
                                 value={content}

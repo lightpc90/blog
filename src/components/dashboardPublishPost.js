@@ -1,9 +1,49 @@
 import React, {useEffect, useState} from 'react'
-import { Text, Link, Container, Spacer, Row, Divider, Button, Grid} from '@nextui-org/react'
+import { Text, Link, Container, Spacer, Row, Divider, Button, Loading, Grid} from '@nextui-org/react'
+import PostDeleteModal from './PostDeleteModal'
+import getAUser from '@/firebase/user/getAUser'
+import PublishOrPullDown from '@/firebase/updatePost'
+import { useAuthContext } from '@/context/AuthContext'
 
 const DashboardPublishPost = ({user, postLoading, publishedPost, index, ctxPosts}) => {
     const [author, setAuthor] = useState('')
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+    const [loadingPullDown, setLoadingPullDown] = useState(false)
+    const {updateCtxPosts, setUpdateCtxPosts} = useAuthContext()
+    
+    //to open the delete modal
+    const handlerModal = () => {
+        setDeleteModalVisible(true)
+    };
 
+    const handlePullDown = async()=>{
+        console.log('beginning of post publish')
+        setLoadingPullDown(true)
+        const currentDate = new Date();
+        const options = {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+            weekday: 'short',
+            day: 'numeric',
+            month: 'long',
+        };
+        const formattedDate = currentDate.toLocaleString('en-US', options);
+        const pullDown = formattedDate
+        const id = publishedPost.id
+        console.log('draftpost id: ', publishedPost.id)
+        const updateData = {status: 'Draft', pullDown: pullDown}
+        const {result, error}= await PublishOrPullDown(id, updateData)
+        if(error){console.log('error from publishing draft: ', error)}
+        else{
+            setUpdateCtxPosts(!updateCtxPosts)
+            console.log('Published Post successfully pulled down...')
+        }
+        setLoadingPullDown(false)
+    }
+
+
+    //function to fetch post author
     const fetchAuthor = async()=>{
         if(user.id === publishedPost.author){
           setAuthor('My Post')
@@ -24,6 +64,9 @@ const DashboardPublishPost = ({user, postLoading, publishedPost, index, ctxPosts
 
   return (
     <Container css={{p:0}} key={index}>
+        
+        <PostDeleteModal  deleteModalVisible={deleteModalVisible} setDeleteModalVisible={setDeleteModalVisible} deletePost={publishedPost}/>
+
         {!postLoading?(
         <>
             <Text align='right'>{publishedPost.created}</Text>
@@ -42,13 +85,20 @@ const DashboardPublishPost = ({user, postLoading, publishedPost, index, ctxPosts
         <Spacer y={.5}/>
         <Grid.Container gap={1}>
             <Grid>
-                <Button bordered color='gradient' auto>Update</Button>
+                <Button size='sm'  bordered color='gradient' auto>Update</Button>
             </Grid>
             <Grid>
-                <Button bordered color='secondary' auto>Pull Down</Button>
+                {loadingPullDown?(
+                <Button disabled size='sm' auto bordered color="primary" css={{ px: "$13" }}>
+                    <Loading color="currentColor" size="sm" />
+                </Button>
+                ):(
+                <Button size='sm' onPress={handlePullDown}  bordered color='secondary' auto>Pull Down</Button>
+                )}
+                
             </Grid>
             <Grid>
-                <Button color='error' auto>Delete</Button>
+                <Button size='sm'  onPress={handlerModal} color='error' auto>Delete</Button>
             </Grid>
         </Grid.Container>
         
@@ -56,7 +106,7 @@ const DashboardPublishPost = ({user, postLoading, publishedPost, index, ctxPosts
         <Divider />
         </>
         ):(<>
-        {/** component to load when loading drafts */}
+        {/** component to load when loading posts */}
         <Row css={{height: '100%', top: '$15'}} justify='center'><Loading type='points' color="secondary"/></Row>
         </>)}
         

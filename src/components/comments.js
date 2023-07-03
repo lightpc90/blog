@@ -7,14 +7,14 @@ const Comments = ({id, setComments, comments}) => {
 
   return (
     <div>
-        <NewComment postId={id} setComments={setComments} />
+        <NewComment postId={id} setComments={setComments} comments={comments} />
         <Spacer />
         <Text weight='bold' align='center'>Comments</Text>
         <Spacer y={.5}/>
         <Container><Divider /></Container>
         <Spacer/>
-        {comments?.map((comment)=>{
-            return(<CommentList comment={comment} />)  
+        {comments?.map((comment, index)=>{
+            return(<CommentList comment={comment} index={index} />)  
         })} 
     </div>
   )

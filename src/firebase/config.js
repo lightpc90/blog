@@ -1,8 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore} from "firebase/firestore";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager} from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import { getStorage} from "firebase/storage";
+
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -22,5 +23,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-export const firebase_db = getFirestore(app)
-export const storage = getStorage(app)
+export const firebase_db = initializeFirestore(app, 
+  {localCache: 
+    persistentLocalCache(/*settings*/{tabManager: persistentMultipleTabManager()})
+  }
+  )
+export const storage = getStorage(app) 

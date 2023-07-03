@@ -5,8 +5,8 @@ import addComment from '@/firebase/addComment'
 import { AuthContext } from '@/context/AuthContext'
 import CommentLogin from './commentLogin'
 
-const NewComment = ({postId, setComments}) => {
-  const {user} = useContext(AuthContext)
+const NewComment = ({postId, setComments, comments}) => {
+  const {user, setUpdateCtxPosts, updateCtxPosts} = useContext(AuthContext)
   const [comment, setComment] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -29,14 +29,14 @@ const NewComment = ({postId, setComments}) => {
     }
     checkUser()  
   },[user])
-
+  
   const handlePostComment = async()=>{
     setLoading(true)
     if(!isUser){
       setLoginInputVisible(true)
       setLoading(false)
     }
-    if(!!comment && user){
+    else if(comment && user){
         let commentObject = {content: comment, commenter: user.username, postId:postId}
         const currentDate = new Date();
         const options = {
@@ -50,15 +50,15 @@ const NewComment = ({postId, setComments}) => {
         const formattedDate = currentDate.toLocaleString('en-US', options);
         commentObject.created = formattedDate
         const {result, error} = await addComment(commentObject)
-        if(result){
-          setComments(result.data().comments)
-        }
         if(error){
           console.log('error creating comment', error)
           alert('error posting comment')
         }
+        else{
+          setUpdateCtxPosts(!updateCtxPosts)
+        }
     }
-    else if(comment===null){setIsEmptyComment(true)}
+    else if(comment==null){setIsEmptyComment(true)}
     setComment('')
     setLoading(false)
       

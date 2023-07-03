@@ -58,7 +58,7 @@ export const AuthContextProvider = ({
     }, [ctxLoaded, updateCtxPosts])
 
     return (
-        <AuthContext.Provider value={{user, ctxPosts, setCtxPosts, ctxLoaded, setUpdateCtxPosts}}>
+        <AuthContext.Provider value={{user, ctxPosts, setCtxPosts, ctxLoaded, setUpdateCtxPosts, updateCtxPosts}}>
             {loading && !ctxLoaded ? <Row css={{height: '100%', top: '$15'}} justify='center'><Loading type='points' color="secondary"/></Row> : children}
         </AuthContext.Provider>
     );

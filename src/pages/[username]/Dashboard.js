@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Grid, Loading, Button, Collapse, Row, Input, Text, Avatar, Col, Spacer, Link } from '@nextui-org/react'
+import { Container, Grid, Divider, Loading, Button, Collapse, Row, Input, Text, Avatar, Col, Spacer, Link } from '@nextui-org/react'
 import { useRouter } from 'next/router'
 import Layout from '@/components/Layout'
 import { useAuthContext } from '@/context/AuthContext'
 import {AiFillEdit} from 'react-icons/ai'
+import {BsFillBagCheckFill} from 'react-icons/bs'
 import ProfileEdit from '@/components/ProfileEdit'
 import GetUserAuth from '@/firebase/auth/getUserAuth'
 import {FcAbout} from 'react-icons/fc'
@@ -31,10 +32,12 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true)
     const [postLoading, setPostLoading] = useState(true)
     
+    
 
     const handleEditing = ()=>{
         setIsEditing(true)
     }
+
 
     const setUserInfo =async()=>{
             if(user.username){_setUsername(user.username)}
@@ -87,7 +90,7 @@ const Dashboard = () => {
     }
 
     useEffect(()=>{
-        if(ctxPosts.length>0){
+        if(ctxPosts.length>0 && user){
             AllPosts()
         }
         else{console.log('ctxPosts is empty')}
@@ -97,134 +100,143 @@ const Dashboard = () => {
 
   return (
     <>
-        {!loading?(
         <Layout>
+            {!loading?(
+            
             <Container css={{'@md':{px:400}}}>
-        <Col align='center'>
-            <Avatar src='/images/avatar_dp.jpg'
-            color='secondary'
-            size='lg'
-            bordered/>
-            <Text weight='bold'>Hi, {_username}</Text>
-        </Col>
-
-        <Spacer/>
-    
-        {isEditing?(
-            <>
-             <ProfileEdit 
-             email={email}
-             setEmail={setEmail} 
-             phone={phone}
-             setPhone = {setPhone} 
-             firstName={firstName}
-             setFirstName={setFirstName}
-             lastName={lastName}
-             setLastName={setLastName}
-             userBio={userBio}
-             setUserBio={setUserBio}
-             setIsEditing={setIsEditing}
-             registeredWithEmail={registeredWithEmail}
-             registeredWithPhone={registeredWithPhone}/>
-            </>):(
-            <>
-            <Row justify='center'>
-                <Button css={{zIndex:'1'}} onPress={handleEditing} color='secondary' bordered auto>Edit Profile</Button>
-            </Row>
-            
-            <Spacer/>
-            <Container>
-            <Col justify='center'>
-                <Row justify='center'>
-                    <Text size={20}>
-                        <FcAbout/>
-                    </Text>
-                    <Text color='secondary' weight='bold' align='center'>
-                        Bio 
-                    </Text>
-                </Row>
-                
-                <Text align='center'>
-                    {userBio}
-                </Text>
+            <Col align='center'>
+                <Avatar src='/images/avatar_dp.jpg'
+                color='secondary'
+                size='lg'
+                bordered/>
+                <Text weight='bold'>Hi, {_username}</Text>
             </Col>
+
+            <Spacer/>
+        
+            {isEditing?(
+                <>
+                <ProfileEdit 
+                email={email}
+                setEmail={setEmail} 
+                phone={phone}
+                setPhone = {setPhone} 
+                firstName={firstName}
+                setFirstName={setFirstName}
+                lastName={lastName}
+                setLastName={setLastName}
+                userBio={userBio}
+                setUserBio={setUserBio}
+                setIsEditing={setIsEditing}
+                registeredWithEmail={registeredWithEmail}
+                registeredWithPhone={registeredWithPhone}/>
+                </>):(
+                <>
+                <Row justify='center'>
+                    <Button css={{zIndex:'1'}} onPress={handleEditing} color='secondary' bordered auto>Edit Profile</Button>
+                </Row>
+                
+                <Spacer/>
+                <Container>
+                <Col justify='center'>
+                    <Row justify='center'>
+                        <Text size={20}>
+                            <FcAbout/>
+                        </Text>
+                        <Text color='secondary' weight='bold' align='center'>
+                            Bio 
+                        </Text>
+                    </Row>
+                    
+                    <Text align='center'>
+                        {userBio}
+                    </Text>
+                </Col>
+                </Container>
+                <Spacer y={6}/>
+                <Divider/>
+                <Spacer />
+                <Text align='center' size={25} color='secondary'><BsFillBagCheckFill/></Text>
+                <Spacer y={1}/>
+                
+                <Container gap={2} display='flex' direction='column' css={{p:0}}>
+                    <Row  align='center'>
+                        <Text color='secondary' size={20} weight='bold'><MdEmail/></Text>
+                        <Spacer x={0.3}/>
+                        <Text >{email}</Text>
+                    
+                    </Row>
+                    <Row align='center'>
+                        <Text color='secondary' weight='bold' size={20}>
+                            <MdContactPhone/>
+                        </Text>
+                        <Spacer x={0.3}/>
+                        <Text >{phone}</Text>
+                    </Row>
+                    <Row align='center'>
+                        <Text color='secondary' weight='bold'>First Name:</Text>
+                        <Spacer x={0.3}/>
+                        <Text >{firstName}</Text>
+                    </Row>
+                    <Row align='center'>
+                        <Text color='secondary' weight='bold'>Last Name:</Text>
+                        <Spacer x={0.3}/>
+                        <Text >{lastName}</Text>
+                    </Row>
+                </Container>
+                <Spacer y={2}/>
+                </>)}
+                
+                <Spacer/>
+
+                {/** Collapse component for draft and published posts */}
+                <Text align='center' size={20} weight='bold' color='secondary'> My Blog Posts</Text>
+                <Spacer y={1}/>
+                <Container css={{px:'$18'}}><Divider/> </Container>
+                
+                <Container display='inline' gap={2}>
+                    <Grid  sm={12} md={4}>
+                        <Collapse
+                        bordered
+                        shadow
+                        title='Drafts'
+                        >
+                            {drafts.length>0?(
+                            <>
+                                {drafts.map((draft, index)=>{
+                                    return(<DashboardDraftPost ctxPosts={ctxPosts} postLoading={postLoading} draftPost={draft} index={index}/>)
+                                })}
+                            </>):(
+                            <>
+                                <Link href={`/Admin/NewPost`}>Create Your First Draft</Link>
+                            </>)}
+                        </Collapse>
+                    </Grid>
+                    <Spacer y={.5}/>
+                    <Grid sm={12} md={4}>
+                        <Collapse
+                        bordered
+                        shadow
+                        title='Published'
+                        >
+                            {published.length>0?(<>
+                                {published.map((publishedPost, index)=>{
+                                    return(<DashboardPublishPost ctxPosts={ctxPosts} user={user} postLoading={postLoading} publishedPost={publishedPost} index={index}/>)
+                                })}
+                            </>):(<>
+                                <Link href={`/Admin/NewPost`}>Create Your First Blog</Link>
+                            </>)}   
+                        </Collapse>
+                    </Grid>
+                </Container>
             </Container>
             
-            <Spacer y={6}/>
-            <Container gap={2} display='flex' direction='column' css={{p:0}}>
-                
-                <Row  align='center'>
-                    <Text color='secondary' size={20} weight='bold'><MdEmail/></Text>
-                    <Spacer x={0.3}/>
-                    <Text >{email}</Text>
-                
-                </Row>
-                <Row align='center'>
-                    <Text color='secondary' weight='bold' size={20}>
-                        <MdContactPhone/>
-                    </Text>
-                    <Spacer x={0.3}/>
-                    <Text >{phone}</Text>
-                </Row>
-                <Row align='center'>
-                    <Text color='secondary' weight='bold'>First Name:</Text>
-                    <Spacer x={0.3}/>
-                    <Text >{firstName}</Text>
-                </Row>
-                <Row align='center'>
-                    <Text color='secondary' weight='bold'>Last Name:</Text>
-                    <Spacer x={0.3}/>
-                    <Text >{lastName}</Text>
-                </Row>
-            </Container>
-            </>)}
-             
-            <Spacer/>
-
-            {/** Collapse component for draft and published posts */}
-            <Text align='center' size={20} weight='bold' color='secondary'> My Blog Posts</Text> 
-            <Container display='inline' gap={2}>
-                <Grid  sm={12} md={4}>
-                    <Collapse
-                    bordered
-                    shadow
-                    title='Drafts'
-                    >
-                        {drafts.length>0?(
-                        <>
-                            {drafts.map((draft, index)=>{
-                                return(<DashboardDraftPost postLoading={postLoading} draftPost={draft} index={index}/>)
-                            })}
-                        </>):(
-                        <>
-                            <Link href={`/Admin/NewPost`}>Create Your First Draft</Link>
-                        </>)}
-                    </Collapse>
-                </Grid>
-                <Spacer y={.5}/>
-                <Grid sm={12} md={4}>
-                    <Collapse
-                    bordered
-                    shadow
-                    title='Published'
-                    >
-                        {published.length>0?(<>
-                            {published.map((publishedPost, index)=>{
-                                return(<DashboardPublishPost ctxPosts={ctxPosts} user={user} postLoading={postLoading} publishedPost={publishedPost} index={index}/>)
-                            })}
-                        </>):(<>
-                            <Link href={`/Admin/NewPost`}>Create Your First Blog</Link>
-                        </>)}   
-                    </Collapse>
-                </Grid>
-            </Container>
-        </Container>
+            ):(
+            <>
+                <Row css={{height: '400px'}} align='center' justify='center'><Loading color="secondary" /></Row>
+            </>
+            )}
         </Layout>
-        ):(
-        <>
-            <Row css={{height: '400px'}} align='center' justify='center'><Loading color="secondary" /></Row>
-        </>
-        )}
     </>      
   )
 }
