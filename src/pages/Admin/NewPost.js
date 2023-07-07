@@ -61,10 +61,9 @@ const NewPost = () => {
 
     const handlePreview =()=>{
         if(title && postImage && content){
-            setPost({title: capitalizeFirstLetter(title).fullSentence,  description: capitalizeFirstLetter(description).fullSentence,  content: sanitizeHtml(content).__html, PreviewPostImage: imageURL })
+            setPost({title: title,  description: description,  content: sanitizeHtml(content).__html, PreviewPostImage: imageURL })
             setCreating(false)
-        }
-        
+        }   
     }
     const handleEdit=()=>{setCreating(true)}
 
@@ -84,14 +83,11 @@ const NewPost = () => {
             }
             else{
                 router.push(`/${user.username}/Dashboard`)
-            }
-            
+            }   
         }
         else{console.log('error from saving post to dp: ', error)}
         setUpdateCtxPosts(true)
         setSaveLoading(false)
-         
-
     }
 
 

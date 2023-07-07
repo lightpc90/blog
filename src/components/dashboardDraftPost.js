@@ -4,7 +4,7 @@ import PublishOrPullDown from '@/firebase/updatePost'
 import { Text, Container, Link, Spacer, Row, Loading, Divider, Button, Grid } from '@nextui-org/react'
 import { useAuthContext } from '@/context/AuthContext'
 
-const DashboardDraftPost = ({postLoading, draftPost, index}) => {
+const DashboardDraftPost = ({postLoading, draftPost, index, allDrafts, setDrafts}) => {
     const {setUpdateCtxPosts, updateCtxPosts} = useAuthContext()
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [loadingPublish, setLoadingPublish] = useState(false)
@@ -44,7 +44,7 @@ const DashboardDraftPost = ({postLoading, draftPost, index}) => {
     return (
         <Container css={{p:0}} key={index}>
 
-            <PostDeleteModal  deleteModalVisible={deleteModalVisible} setDeleteModalVisible={setDeleteModalVisible} deletePost={draftPost}/>
+            <PostDeleteModal deleteModalVisible={deleteModalVisible} setDeleteModalVisible={setDeleteModalVisible} deletePost={draftPost} allPosts={allDrafts} setPosts={setDrafts} />
 
             {!postLoading?(
             <>
