@@ -11,6 +11,9 @@ import {FcAbout} from 'react-icons/fc'
 import {MdEmail, MdContactPhone} from 'react-icons/md'
 import DashboardPublishPost from '@/components/dashboardPublishPost'
 import DashboardDraftPost from '@/components/dashboardDraftPost'
+import FetchPosts from '@/helperFunctions/FetchPosts'
+import PostEditModal from '@/components/PostEditModal'
+import PostPreviewModal from '@/components/PostPreviewModal'
 
 
 
@@ -31,9 +34,74 @@ const Dashboard = () => {
     const [published, setPublished] = useState([])
     const [loading, setLoading] = useState(true)
     const [postLoading, setPostLoading] = useState(true)
-    
+
+    //modal states managment
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const [content, setContent] = useState('')
+    const [imageURL, setImageURL] = useState('')
+    const [editVisible, setEditVisible] = useState(false);
+    const [previewVisible, setPreviewVisible] = useState(false)
+    const [postImage, setPostImage] = useState(null)
+    const [id, setId] = useState('')
+    const [status, setStatus] = useState('')
+    const [oldContent, setOldContent] = useState({})
+
+    const handleFile=(e)=>{
+        setPostImage(e.target.files[0])
+    }
+
+    const handleContentChange =(value)=>{
+        setContent(value)
+    }
+    //function to open modal to edit a blog post
+    const handleEditingOpenModal=()=>{
+        setEditVisible(true)
+    }
+
+    const handleEditingCloseModal=()=>{
+        setEditVisible(false)
+    }
+
+    const handlePreviewOpenModal=()=>{
+        setPreviewVisible(true)
+    }
+
+    const handlePreviewCloseModal=()=>{
+        setPreviewVisible(false)
+    }
+
+    const handlePreview =()=>{
+        if(title && imageURL && content){
+            setEditVisible(false)
+            setPreviewVisible(true)
+        }   
+    }
+
+    const handleBackToEdit =()=>{
+        handlePreviewCloseModal()
+        handleEditingOpenModal()
+      }
     
 
+    const handleUpdateButton=(postId)=>{
+        const postToUpdate = ctxPosts.find((ctxPost)=>{return(ctxPost.id === postId)})
+        setOldContent({title: postToUpdate.title, description: postToUpdate.description, content: postToUpdate.content, imageURL: postToUpdate.postImage.downloadURL})
+        setStatus(postToUpdate.status)
+        setId(postId)
+        setTitle(postToUpdate.title)
+        setImageURL(postToUpdate.postImage.downloadURL)
+        setDescription(postToUpdate.description)
+        setContent(postToUpdate.content)
+        setEditVisible(true)
+        console.log('post image url: ', postToUpdate.postImage.downloadURL)
+    }
+
+    const post = {title, setTitle, description, setDescription, content, handleContentChange, imageURL, setImageURL, postImage, setPostImage, id, status}
+    const modal = {editVisible, setEditVisible, previewVisible, setPreviewVisible}
+    const handleFunctions = {handleEditingOpenModal, handleEditingCloseModal, handlePreviewOpenModal, handlePreviewCloseModal, handlePreview, handleFile, handleUpdateButton, handleBackToEdit}
+    
+//function to edit user basic info
     const handleEditing = ()=>{
         setIsEditing(true)
     }
@@ -78,20 +146,9 @@ const Dashboard = () => {
         } 
     },[ctxLoaded])
 
-
-    const AllPosts = ()=>{
-        const AllDraft =  ctxPosts.filter((ctxPost)=>{return(ctxPost.author === user.id && ctxPost.status === "Draft")})
-        console.log('all draft: ', AllDraft)
-        setDrafts(AllDraft)
-
-        const AllPublished =  ctxPosts.filter((ctxPost)=>{return(ctxPost.author === user.id && ctxPost.status === "Published")})
-        console.log('all published: ', AllPublished)
-        setPublished(AllPublished)
-    }
-
     useEffect(()=>{
         if(ctxPosts.length>0 && user){
-            AllPosts()
+            FetchPosts('', ctxPosts, user, setDrafts, setPublished)
         }
         else{console.log('ctxPosts is empty')}
         setPostLoading(false)
@@ -101,6 +158,10 @@ const Dashboard = () => {
   return (
     <>
         <Layout>
+
+            {editVisible && <PostEditModal post={post} modal={modal} handleFunctions={handleFunctions} />}
+
+            {previewVisible && <PostPreviewModal post={post} modal={modal} handleFunctions={handleFunctions} oldContent={oldContent} />}
             {!loading?(
             
             <Container css={{'@md':{px:400}}}>
@@ -204,7 +265,7 @@ const Dashboard = () => {
                             {drafts.length>0?(
                             <>
                                 {drafts.map((draft, index)=>{
-                                    return(<DashboardDraftPost ctxPosts={ctxPosts} postLoading={postLoading} draftPost={draft} index={index}/>)
+                                    return(<DashboardDraftPost ctxPosts={ctxPosts} postLoading={postLoading} draftPost={draft} index={index} allDrafts={drafts} setDrafts={setDrafts} setEditVisible={setEditVisible} handleUpdateButton={handleUpdateButton} />)
                                 })}
                             </>):(
                             <>
@@ -221,7 +282,7 @@ const Dashboard = () => {
                         >
                             {published.length>0?(<>
                                 {published.map((publishedPost, index)=>{
-                                    return(<DashboardPublishPost ctxPosts={ctxPosts} user={user} postLoading={postLoading} publishedPost={publishedPost} index={index}/>)
+                                    return(<DashboardPublishPost ctxPosts={ctxPosts} user={user} postLoading={postLoading} publishedPost={publishedPost} index={index} allPublished={published} setPublished={setPublished} handleUpdateButton={handleUpdateButton} />)
                                 })}
                             </>):(<>
                                 <Link href={`/Admin/NewPost`}>Create Your First Blog</Link>
@@ -230,7 +291,6 @@ const Dashboard = () => {
                     </Grid>
                 </Container>
             </Container>
-            
             ):(
             <>
                 <Row css={{height: '400px'}} align='center' justify='center'><Loading color="secondary" /></Row>

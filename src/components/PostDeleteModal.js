@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { Modal, Button, Text, Input, Row, Spacer, Col, Loading } from "@nextui-org/react";
 import DeleteAPost from "@/firebase/deleteAPost";
 
-const PostDeleteModal = ({deleteModalVisible, setDeleteModalVisible, deletePost}) => {
+const PostDeleteModal = ({deleteModalVisible, setDeleteModalVisible, deletePost, allPosts, setPosts}) => {
     const [confirmationText, setConfirmationText] = useState('')
     const [disableDelete, setDisableDelete] = useState(true)
     const [Loadingdelete, setLoadingDelete] = useState(false)
@@ -11,12 +11,18 @@ const PostDeleteModal = ({deleteModalVisible, setDeleteModalVisible, deletePost}
         setConfirmationText(e.target.value)
     }
 
+    const updatePosts=()=>{
+        const updatedPosts = allPosts.filter((post)=>{return(post.id !== deletePost.id)})
+        setPosts(updatedPosts)
+    }
+
     useEffect(()=>{
         if(confirmationText==='delete'){
             setDisableDelete(false)
         }
         else{setDisableDelete(true)}
     }, [confirmationText])
+    
     //to close delete modal
     const closeHandler = () => {
         setDeleteModalVisible(false);
@@ -30,6 +36,7 @@ const PostDeleteModal = ({deleteModalVisible, setDeleteModalVisible, deletePost}
            const {error} = await DeleteAPost(deletePost.id)
            if(error){console.log('error deleting post')}
            else{
+            updatePosts()
             setLoadingDelete(false)
             closeHandler()
            }

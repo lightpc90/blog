@@ -5,7 +5,7 @@ import getAUser from '@/firebase/user/getAUser'
 import PublishOrPullDown from '@/firebase/updatePost'
 import { useAuthContext } from '@/context/AuthContext'
 
-const DashboardPublishPost = ({user, postLoading, publishedPost, index, ctxPosts}) => {
+const DashboardPublishPost = ({user, postLoading, publishedPost, index, ctxPosts, allPublished, setPublished, handleUpdateButton}) => {
     const [author, setAuthor] = useState('')
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [loadingPullDown, setLoadingPullDown] = useState(false)
@@ -65,7 +65,7 @@ const DashboardPublishPost = ({user, postLoading, publishedPost, index, ctxPosts
   return (
     <Container css={{p:0}} key={index}>
         
-        <PostDeleteModal  deleteModalVisible={deleteModalVisible} setDeleteModalVisible={setDeleteModalVisible} deletePost={publishedPost}/>
+        <PostDeleteModal deleteModalVisible={deleteModalVisible} setDeleteModalVisible={setDeleteModalVisible} deletePost={publishedPost} allPosts={allPublished} setPosts={setPublished} />
 
         {!postLoading?(
         <>
@@ -85,7 +85,7 @@ const DashboardPublishPost = ({user, postLoading, publishedPost, index, ctxPosts
         <Spacer y={.5}/>
         <Grid.Container gap={1}>
             <Grid>
-                <Button size='sm'  bordered color='gradient' auto>Update</Button>
+                <Button size='sm' onPress={()=>{handleUpdateButton(publishedPost.id)}}  bordered color='gradient' auto>Update</Button>
             </Grid>
             <Grid>
                 {loadingPullDown?(
