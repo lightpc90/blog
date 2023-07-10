@@ -45,9 +45,7 @@ const Dashboard = () => {
     const [postImage, setPostImage] = useState(null)
     const [id, setId] = useState('')
     const [status, setStatus] = useState('')
-    
-    //variable to store the old contents of the post being edited
-    let oldContent = {}
+    const [oldContent, setOldContent] = useState({})
 
     const handleFile=(e)=>{
         setPostImage(e.target.files[0])
@@ -88,7 +86,7 @@ const Dashboard = () => {
 
     const handleUpdateButton=(postId)=>{
         const postToUpdate = ctxPosts.find((ctxPost)=>{return(ctxPost.id === postId)})
-        oldContent = {title: postToUpdate.title, description: postToUpdate.description, content: postToUpdate.content, imageURL: postToUpdate.postImage.downloadURL}
+        setOldContent({title: postToUpdate.title, description: postToUpdate.description, content: postToUpdate.content, imageURL: postToUpdate.postImage.downloadURL})
         setStatus(postToUpdate.status)
         setId(postId)
         setTitle(postToUpdate.title)
@@ -160,13 +158,10 @@ const Dashboard = () => {
   return (
     <>
         <Layout>
-            
-            
+
             {editVisible && <PostEditModal post={post} modal={modal} handleFunctions={handleFunctions} />}
 
             {previewVisible && <PostPreviewModal post={post} modal={modal} handleFunctions={handleFunctions} oldContent={oldContent} />}
-           
-
             {!loading?(
             
             <Container css={{'@md':{px:400}}}>
@@ -270,7 +265,7 @@ const Dashboard = () => {
                             {drafts.length>0?(
                             <>
                                 {drafts.map((draft, index)=>{
-                                    return(<DashboardDraftPost ctxPosts={ctxPosts} postLoading={postLoading} draftPost={draft} index={index} allDrafts={drafts} setDrafts={setDrafts} setEditVisible={setEditVisible} />)
+                                    return(<DashboardDraftPost ctxPosts={ctxPosts} postLoading={postLoading} draftPost={draft} index={index} allDrafts={drafts} setDrafts={setDrafts} setEditVisible={setEditVisible} handleUpdateButton={handleUpdateButton} />)
                                 })}
                             </>):(
                             <>
@@ -296,7 +291,6 @@ const Dashboard = () => {
                     </Grid>
                 </Container>
             </Container>
-            
             ):(
             <>
                 <Row css={{height: '400px'}} align='center' justify='center'><Loading color="secondary" /></Row>
