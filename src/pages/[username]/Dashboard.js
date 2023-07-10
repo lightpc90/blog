@@ -14,6 +14,7 @@ import DashboardDraftPost from '@/components/dashboardDraftPost'
 import FetchPosts from '@/helperFunctions/FetchPosts'
 import PostEditModal from '@/components/PostEditModal'
 import PostPreviewModal from '@/components/PostPreviewModal'
+import Collections from '@/components/Collections'
 
 
 
@@ -247,12 +248,14 @@ const Dashboard = () => {
                 </Container>
                 <Spacer y={2}/>
                 </>)}
+
+                <Collections />
                 
                 <Spacer/>
 
                 {/** Collapse component for draft and published posts */}
                 <Text align='center' size={20} weight='bold' color='secondary'> My Blog Posts</Text>
-                <Spacer y={1}/>
+                <Spacer y={0.5}/>
                 <Container css={{px:'$18'}}><Divider/> </Container>
                 
                 <Container display='inline' gap={2}>
