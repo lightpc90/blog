@@ -32,14 +32,14 @@ const DashboardDraftPost = ({postLoading, draftPost, index, allDrafts, setDrafts
 
     //handle date change event
     const handlePickerChange=(e)=>{
-        setSelectedDate(new Date(e.target.value))   
+        setSelectedDate(new Date(e.target.value).getTime())   
     }
 
     const handleSetDate= async()=>{
         console.log('entering handleSetDate function...')
         setLoadingSetDate(true)
         //function to update the post with schedule time
-        if (selectedDate < new Date()){return}
+        if (selectedDate < new Date().getTime()){return}
         const {error} = await PublishOrPullDown(draftPost.id, {schedule: selectedDate})
         if (error){
             setLoadingSetDate(false)
@@ -48,13 +48,17 @@ const DashboardDraftPost = ({postLoading, draftPost, index, allDrafts, setDrafts
         }
         setLoadingSetDate(false)
         setCountdown(true)
+        setUpdateCtxPosts(!updateCtxPosts)
+
         
     }
    
     //loop to constantly check time remaining for a schedule post to go live
     useEffect(()=>{
-        const now = new Date()
-        if(draftPost.schedule && draftPost.schedule > now){
+        const now = new Date().getTime()
+        console.log('draftPost publish retrieved: ', draftPost.schedule)
+        console.log('current time: ', now)
+        if(!!draftPost.schedule && draftPost.schedule > now){
             setSelectedDate(draftPost.schedule)
             setCountdown(true)
         }
