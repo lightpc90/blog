@@ -13,11 +13,13 @@ const DashboardDraftPost = ({postLoading, draftPost, index, allDrafts, setDrafts
     const [showPicker, setShowPicker] = useState(false);
     const [countdown, setCountdown] = useState(false);
     const [loadingSetDate, setLoadingSetDate] = useState(false)
-    const [selectedDate, setSelectedDate] = useState('')
-    const [pastDate, setPastDate] = useState('')
+    const [selectedDate, setSelectedDate] = useState(new Date().getTime())
+    const [pastDate, setPastDate] = useState(false)
+    const [dateChanged, setDateChanged] = useState(false)
 
     const [disableDelete, setDisableDelete] = useState(false)
     const [disablePublish, setDisablePublish] = useState(false)
+    const [stopScheduleLoading, setStopScheduleLoading] = useState(false)
 
 
     //opens the delete modal
@@ -32,14 +34,26 @@ const DashboardDraftPost = ({postLoading, draftPost, index, allDrafts, setDrafts
 
     //handle date change event
     const handlePickerChange=(e)=>{
+        setPastDate(false)
+        setDateChanged(true)
         setSelectedDate(new Date(e.target.value).getTime())   
+    }
+
+    const handleDateOnblur =()=>{
+        if (dateChanged && selectedDate < new Date().getTime()){
+            setPastDate(true)
+            }
     }
 
     const handleSetDate= async()=>{
         console.log('entering handleSetDate function...')
         setLoadingSetDate(true)
         //function to update the post with schedule time
-        if (selectedDate < new Date().getTime()){return}
+        if (selectedDate < new Date().getTime()){
+            setPastDate(true)
+            setLoadingSetDate(false)
+            return
+        }
         const {error} = await PublishOrPullDown(draftPost.id, {schedule: selectedDate})
         if (error){
             setLoadingSetDate(false)
@@ -64,10 +78,19 @@ const DashboardDraftPost = ({postLoading, draftPost, index, allDrafts, setDrafts
         }
     }, [])
 
-    const handleStopSchedule =()=>{
+    const handleStopSchedule =async()=>{
+        setStopScheduleLoading(true)
+        const {error} = await PublishOrPullDown(draftPost.id, {schedule: ''})
+        if (error){
+            setStopScheduleLoading(false)
+            console.log('error stopping the schedule')
+            return
+        }
+        setStopScheduleLoading(false)
         setCountdown(false)
         setDisableDelete(false)
         setDisablePublish(false)
+        setUpdateCtxPosts(!updateCtxPosts)
     }
 
    
@@ -136,7 +159,7 @@ const DashboardDraftPost = ({postLoading, draftPost, index, allDrafts, setDrafts
             //conditionally render date and time picker
             showPicker && <Grid.Container  > 
                 <Grid md={4}>
-                    <input type="datetime-local"  onChange={handlePickerChange} />
+                    <input type="datetime-local" onBlur={handleDateOnblur}  onChange={handlePickerChange} />
                 </Grid>
 
                 <Spacer y={2}/>
@@ -153,6 +176,7 @@ const DashboardDraftPost = ({postLoading, draftPost, index, allDrafts, setDrafts
                 <Grid>
                     <Button size='sm' onPress={handleSetDate} bordered color='gradient' auto>Set Date</Button>
                 </Grid>
+                {dateChanged && pastDate && <Text color='error'>Sorry, You cannot time-travel to the past here</Text>}
                 
                 </>)}
                 
@@ -165,7 +189,14 @@ const DashboardDraftPost = ({postLoading, draftPost, index, allDrafts, setDrafts
                 <Grid>
                     {countdown?(
                     <> 
-                       <Button onPress={handleStopSchedule} size='sm' bordered color='gradient' auto>Stop Schedule</Button> 
+                        {stopScheduleLoading?(<>
+                            <Button disabled size='sm' auto bordered color="primary" css={{ px: "$13" }}>
+                                <Loading color="currentColor" size="sm" />
+                            </Button>
+                        </>):(<>
+                            <Button onPress={handleStopSchedule} size='sm' bordered color='gradient' auto>Stop Schedule</Button>
+                        </>)}
+                        
                     </>):(
                     <>
                         <Button onPress={handleScheduleButton} size='sm' bordered color='gradient' auto>Schedule</Button>
