@@ -15,6 +15,7 @@ import FetchPosts from '@/helperFunctions/FetchPosts'
 import PostEditModal from '@/components/PostEditModal'
 import PostPreviewModal from '@/components/PostPreviewModal'
 import Collections from '@/components/Collections'
+import ChangeDpAvatar from '@/components/ChangeDpAvatar'
 
 
 
@@ -107,7 +108,6 @@ const Dashboard = () => {
         setIsEditing(true)
     }
 
-
     const setUserInfo =async()=>{
             if(user.username){_setUsername(user.username)}
             else{_setUsername('Not Set')}
@@ -167,10 +167,7 @@ const Dashboard = () => {
             
             <Container css={{'@md':{px:400}}}>
             <Col align='center'>
-                <Avatar src='/images/avatar_dp.jpg'
-                color='secondary'
-                size='lg'
-                bordered/>
+                <ChangeDpAvatar username={username} />
                 <Text weight='bold'>Hi, {_username}</Text>
             </Col>
 
