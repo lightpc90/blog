@@ -71,7 +71,7 @@ const ChangeDpAvatar = ({username}) => {
   return (
     <>
         <Container display='flex' justify='center'>
-            <Avatar size="lg" color='secondary' 
+            <Avatar size="xl" color='secondary' 
               bordered
               src={`${previewImage}`}
               alt='user dp'
